@@ -1,0 +1,36 @@
+{% layout none %}
+<!doctype html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <meta name='theme-color' content='#2c52e8'>
+  <title>My project — Helia Web</title>
+  <meta name='robots' content='noindex'>
+  <link rel='canonical' href='{{ canonical_url }}'>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232c52e8'/%3E%3Cpath d='M17 14h8.2v14.3c2.1-2.8 5-4.2 8.6-4.2 6.1 0 9.6 4 9.6 10.7V50h-8.2V36.6c0-3.6-1.6-5.5-4.6-5.5-3.3 0-5.4 2.3-5.4 6.2V50H17z' fill='%23fff'/%3E%3Ccircle cx='50.5' cy='45.8' r='4.4' fill='%23f5b83d'/%3E%3C/svg%3E">
+  <link rel='preconnect' href='https://fonts.googleapis.com'>
+  <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
+  <link href='https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap' rel='stylesheet'>
+  <style>html, body { margin: 0; padding: 0; } body { background: #f2f4f8; }</style>
+  {{ content_for_header }}
+</head>
+<body>
+  {% render 'hw-styles-1' %}
+  {% render 'hw-styles-2' %}
+  {% render 'qt-styles' %}
+  {% render 'trk-styles' %}
+  <style>
+    .hw .pj__status small, .hw .pj__msg small { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); }
+    .hw .pj__status h2 { font-size: clamp(1.5rem, 4vw, 2rem); margin-top: 0.4rem; }
+    .hw .pj__status p { color: var(--muted); margin-top: 0.5rem; max-width: 56ch; }
+    .hw .pj__status + .trk { margin-block: 2rem 1.5rem; }
+    .hw .pj__msg { margin-top: 1rem; padding: 1.1rem 1.25rem; border-left: 3px solid var(--yellow); background: #fff8e8; border-radius: 0 12px 12px 0; }
+    .hw .pj__msg p { margin-top: 0.4rem; }
+    .hw .pj__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+    .hw .pj__signin { display: grid; gap: 1.25rem; justify-items: start; }
+    .hw .pj__signin p { color: var(--muted); max-width: 52ch; }
+  </style>
+  {% render 'pj-body' %}
+</body>
+</html>

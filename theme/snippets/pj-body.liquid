@@ -1,0 +1,115 @@
+{%- comment -%}
+  My project page. Stage comes from the customer's "Project stage" metafield (custom.project_stage),
+  set in Shopify admin > Customers. Paying the Website deposit product moves it to In production automatically.
+{%- endcomment -%}
+{%- assign deposit_product_id = 15991257334144 -%}
+<div class='hw qt-page'>
+  <header class='nav'>
+    <div class='wrap nav__inner'>
+      <a class='brand' href='/' aria-label='Helia Web home'>
+        <svg class='brand__mark' viewBox='0 0 64 64' aria-hidden='true'><rect width='64' height='64' rx='14' fill='#2c52e8'/><path d='M17 14h8.2v14.3c2.1-2.8 5-4.2 8.6-4.2 6.1 0 9.6 4 9.6 10.7V50h-8.2V36.6c0-3.6-1.6-5.5-4.6-5.5-3.3 0-5.4 2.3-5.4 6.2V50H17z' fill='#fff'/><circle cx='50.5' cy='45.8' r='4.4' fill='#f5b83d'/></svg>
+        Helia&nbsp;<small>Web</small>
+      </a>
+      <nav class='nav__links' aria-label='Main'>
+        <a href='/'>Back to site</a>
+        {%- if customer -%}<a href='{{ routes.account_logout_url }}'>Sign out</a>{%- endif -%}
+        <a class='btn btn--blue nav__cta' href='tel:+35799238575'>Call me</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class='qt'>
+    <div class='wrap' style='max-width: 820px'>
+      <div class='qt__head'>
+        <span class='eyebrow'>My project</span>
+        <h1>{% if customer and customer.first_name != blank %}Hi {{ customer.first_name }}, here's your project{% else %}Track your project{% endif %}</h1>
+      </div>
+
+      <div class='qt__card'>
+        {%- if customer -%}
+          {%- liquid
+            assign stage = customer.metafields.custom.project_stage.value | default: ''
+            assign paid = false
+            for order in customer.orders
+              for item in order.line_items
+                if item.product_id == deposit_product_id and order.financial_status == 'paid'
+                  assign paid = true
+                endif
+              endfor
+            endfor
+            assign call = false
+            case stage
+              when 'Website live'
+                assign p = 4
+              when 'In production'
+                assign p = 3
+              when 'Awaiting deposit'
+                assign p = 2
+              when 'Call requested'
+                assign p = 2
+                assign call = true
+              else
+                assign p = 1
+            endcase
+            if paid and p < 3
+              assign p = 3
+              assign call = false
+            endif
+            case p
+              when 4
+                assign status = 'Your website is live!'
+                assign detail = 'Thank you for working with me. If you need any changes, just get in touch.'
+              when 3
+                assign status = 'Your website is in production'
+                assign detail = 'Your deposit is received and I am building your website now.'
+              when 2
+                if call
+                  assign status = 'Call requested'
+                  assign detail = "I'll call you soon to talk about your website. You can also place your deposit any time to get started."
+                else
+                  assign status = 'Waiting for your deposit'
+                  assign detail = 'Place your €50 deposit to book your spot, and your website goes into production.'
+                endif
+              else
+                assign status = 'Quote submitted'
+                assign detail = 'I have your quote request. Ready to go ahead? Place your deposit, or call me to talk it through.'
+            endcase
+          -%}
+          <div class='pj__status'>
+            <small>Current stage</small>
+            <h2>{{ status }}</h2>
+            <p>{{ detail }}</p>
+          </div>
+          {% render 'qt-tracker', p: p, call: call, id: 'pj-trk' %}
+
+          <dl class='qt__review'>
+            {%- assign ptype = customer.metafields.custom.project_type.value -%}
+            {%- if ptype and ptype != '' -%}<div><dt>Website</dt><dd>{{ ptype }}</dd></div>{%- endif -%}
+            {%- assign fq = customer.metafields.custom.final_quote.value -%}
+            {%- if fq and fq != '' -%}<div><dt>Final price</dt><dd>{{ fq }}</dd></div>{%- endif -%}
+            <div><dt>Account</dt><dd style='font-family: var(--font-body); font-weight: 600; font-size: 1rem'>{{ customer.email }}</dd></div>
+          </dl>
+
+          {%- assign msg = customer.metafields.custom.project_message.value -%}
+          {%- if msg and msg != '' -%}
+            <div class='pj__msg'><small>Message from Helia Web</small><p>{{ msg | newline_to_br }}</p></div>
+          {%- endif -%}
+
+          <div class='pj__actions'>
+            {%- if p < 3 -%}
+              <a class='btn btn--yellow' href='/cart/60096830243200:1?checkout[email]={{ customer.email | url_encode }}'>Pay €50 deposit</a>
+            {%- endif -%}
+            <a class='btn btn--ghost' href='tel:+35799238575'>Call +357 99 238575</a>
+            <a class='btn btn--ghost' href='mailto:christodoulos@heliaweb.com'>Email me</a>
+          </div>
+        {%- else -%}
+          <div class='pj__signin'>
+            <p>Sign in with the email you used for your quote to see what stage your website is at. You'll get a one-time code by email, no password needed.</p>
+            <a class='btn btn--blue' href='/customer_authentication/login?return_to={{ "/pages/my-project" | url_encode }}'>Sign in to see my project</a>
+            <p class='qt__hint'>Don't have a quote yet? <a href='/pages/get-a-quote' style='color: var(--blue); font-weight: 600'>Build your quote</a></p>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </main>
+</div>

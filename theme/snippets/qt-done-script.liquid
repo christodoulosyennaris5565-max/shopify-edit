@@ -1,0 +1,37 @@
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var store = function (k, v) { try { if (v === undefined) return sessionStorage.getItem(k); sessionStorage.setItem(k, v); } catch (e) {} };
+  var q = {}; try { q = JSON.parse(store('hw-quote') || '{}'); } catch (e) {}
+
+  if (q.type) $('qt-done-sum').textContent = q.type + ' · ' + q.price + (q.days ? ' · ready in about ' + q.days + ' days' : '');
+  if (q.email) {
+    $('qc-email').value = q.email;
+    [].forEach.call(document.querySelectorAll('a[href^="/cart/60096830243200"]'), function (a) {
+      a.href = '/cart/60096830243200:1?checkout[email]=' + encodeURIComponent(q.email);
+    });
+  }
+
+  /* Move the tracker to step p (2 = deposit or call requested). */
+  var trk = $('qt-trk');
+  function setStep(p, call) {
+    var steps = trk.querySelectorAll('.trk__step');
+    trk.dataset.p = p;
+    trk.querySelector('.trk__fill').style.setProperty('--fill', Math.round((p - 1) * 100 / 3));
+    [].forEach.call(steps, function (li, i) {
+      var n = i + 1;
+      li.className = 'trk__step trk__step--' + (n === 1 || n < p ? 'done' : n === p ? 'current' : 'todo');
+    });
+    steps[1].querySelector('.trk__label').textContent = call ? 'Call requested' : 'Place €50 deposit';
+  }
+  function show(id) { ['qt-choice', 'qt-pay', 'qt-callbox', 'qt-called'].forEach(function (x) { $(x).hidden = x !== id; }); }
+
+  var next = store('hw-next');
+  if (next === 'call') { setStep(2, true); show('qt-called'); $('qt-done-title').textContent = 'Call requested!'; }
+  else if (next === 'go') { setStep(2); show('qt-pay'); }
+
+  $('qt-go').addEventListener('click', function () { store('hw-next', 'go'); setStep(2); show('qt-pay'); });
+  $('qt-call').addEventListener('click', function () { show('qt-callbox'); $('qc-phone').focus(); });
+  $('qt-callform').addEventListener('submit', function () { store('hw-next', 'call'); });
+})();
+</script>

@@ -1,14 +1,12 @@
 <script>
 (function () {
-  /* Questions and prices. p = one-time price (€), y = yearly price (€), from = price is a starting point. */
-  var NOT_APP = function (a) { return a.type && !a.type.app; };
+  /* Questions and prices. p = one-time price (€), y = yearly price (€), from = price is a starting point, days = production time. */
   var Q = [
     { id: 'type', title: 'Which type of website do you need?', hint: 'Pick the one closest to what you have in mind.', opts: [
-      { v: 'Static website', p: 450, tag: 'Most popular', d: 'Pages that present your business: services, menu, gallery, opening hours and contact.' },
-      { v: 'Animated website', p: 750, d: 'Everything in a static website, plus smooth scroll animations and motion effects.' },
-      { v: 'Website with online bookings', p: 450, y: 250, bookings: 1, d: 'A static website plus an online booking system. The booking system is €250 per year.' },
-      { v: 'Website with payments or an online shop', p: 900, from: 1, pay: 1, d: 'Sell products or take payments online. Final price after a short chat.' },
-      { v: 'Mobile app', p: 1000, from: 1, app: 1, d: 'An iPhone, Android or web app. Final price after a short chat.' }
+      { v: 'Static website', p: 450, days: 5, tag: 'Most popular', d: 'Pages that present your business: services, menu, gallery, opening hours and contact.' },
+      { v: 'Animated website', p: 750, days: 8, d: 'Everything in a static website, plus smooth scroll animations and motion effects.' },
+      { v: 'Website with online bookings', p: 450, y: 250, days: 5, bookings: 1, d: 'A static website plus an online booking system. The booking system is €250 per year.' },
+      { v: 'Website with payments or an online shop', p: 900, from: 1, days: 15, pay: 1, d: 'Sell products or take payments online. Final price after a short chat.' }
     ] },
     { id: 'book', title: 'What will customers book?', when: function (a) { return a.type && a.type.bookings; }, opts: [
       { v: 'Tables (restaurant or café)' }, { v: 'Appointments (barber, salon, dentist)' }, { v: 'Rooms or stays' }, { v: 'Classes or sessions' }, { v: 'Something else' }
@@ -16,37 +14,27 @@
     { id: 'products', title: 'How many products or services will you sell?', hint: 'This helps me prepare your final quote.', when: function (a) { return a.type && a.type.pay; }, opts: [
       { v: 'Up to 20' }, { v: '20 to 100' }, { v: 'More than 100' }, { v: 'Payments only, no shop' }
     ] },
-    { id: 'platform', title: 'Which platforms should the app work on?', when: function (a) { return a.type && a.type.app; }, opts: [
-      { v: 'iPhone' }, { v: 'Android' }, { v: 'iPhone and Android' }, { v: 'Web app (in the browser)' }, { v: 'Not sure yet' }
-    ] },
-    { id: 'pages', title: 'How many pages do you need?', hint: 'A typical site has Home, About, Services, Gallery and Contact.', when: NOT_APP, opts: [
+    { id: 'pages', title: 'How many pages do you need?', hint: 'A typical site has Home, About, Services, Gallery and Contact.', opts: [
       { v: '1 to 5 pages', d: 'Included in the price' }, { v: '6 to 10 pages', l: 'Extra pages (6 to 10)', p: 100 }, { v: 'More than 10 pages', l: 'Extra pages (10+)', p: 150 }
     ] },
-    { id: 'lang', title: 'How many languages?', when: NOT_APP, opts: [
-      { v: '1 language', d: 'Included in the price' }, { v: '2 languages', l: 'Second language', p: 80, d: 'For example Greek and English' }, { v: '3 or more languages', l: 'Extra languages (3+)', p: 150 }
+    { id: 'lang', title: 'How many languages?', opts: [
+      { v: '1 or 2 languages', d: 'Included in the price. For example Greek and English.' }, { v: '3 or more languages', l: 'Extra languages (3+)', p: 80 }
     ] },
-    { id: 'logo', title: 'Do you have a logo?', opts: [
-      { v: 'Yes, I have a logo' }, { v: 'No, design one for me', l: 'Logo design', p: 80 }
+    { id: 'photos', title: 'Do you have your own photos?', hint: 'I write all the text for your website, included in the price.', opts: [
+      { v: 'Yes, I have my own photos', d: 'Included' }, { v: 'No, please add photos for me', d: 'Included' }, { v: 'Some, but I need a few more', d: 'Included' }
     ] },
-    { id: 'content', title: 'Do you have the text and photos?', when: NOT_APP, opts: [
-      { v: "Yes, I'll send them" }, { v: 'I need help writing the text', l: 'Text writing', p: 60 }, { v: 'Not sure yet' }
+    { id: 'extras', title: 'Would you like any extras?', hint: 'Choose as many as you like, or none.', multi: 1, opts: [
+      { v: 'Google Maps & reviews', d: 'Included' }, { v: 'WhatsApp chat button', d: 'Included' },
+      { v: 'Google Business profile setup', p: 50 }, { v: 'Newsletter sign-up', p: 50 }
     ] },
-    { id: 'extras', title: 'Would you like any extras?', hint: 'Choose as many as you like, or none.', multi: 1, when: NOT_APP, opts: [
-      { v: 'Google Maps & reviews', d: 'Included' }, { v: 'WhatsApp chat button', d: 'Included' }, { v: 'Instagram feed', p: 40 },
-      { v: 'Blog or news section', p: 100 }, { v: 'Google Business profile setup', p: 50 }, { v: 'Newsletter sign-up', p: 50 }
-    ] },
-    { id: 'domain', title: 'Do you already have a domain name?', hint: 'For example yourbusiness.com', when: NOT_APP, opts: [
+    { id: 'domain', title: 'Do you already have a domain name?', hint: 'For example yourbusiness.com', opts: [
       { v: 'Yes, I have one' }, { v: 'No, help me get one' }, { v: 'Not sure' }
-    ] },
-    { id: 'time', title: 'When do you need it?', opts: [
-      { v: 'No rush' }, { v: 'Within a month' }, { v: 'Urgent, within 1 week', l: 'Urgent delivery (1 week)', p: 100 }
     ] }
   ];
 
   var form = document.getElementById('qt-form');
   if (!form || document.getElementById('qt-done')) return;
   var box = document.getElementById('qt-steps');
-  var contact = form.querySelector('[data-step=contact]');
   var next = document.getElementById('qt-next'), back = document.getElementById('qt-back'), send = document.getElementById('qt-send');
   var err = document.getElementById('qt-err');
   var eur = function (n) { return '€' + n.toLocaleString('en-US'); };
@@ -81,38 +69,51 @@
   }
 
   var pos = 0;
-  function steps() { return active(answers()).map(function (q) { return q.id; }).concat('contact'); }
+  function steps() { return active(answers()).map(function (q) { return q.id; }).concat('review', 'contact'); }
+
+  function totals(a) {
+    var t = { total: 0, yearly: 0, from: false, lines: [], text: [] };
+    active(a).forEach(function (q) {
+      var v = a[q.id]; if (!v) return;
+      (q.multi ? v : [v]).forEach(function (o) {
+        t.total += o.p || 0; t.yearly += o.y || 0; if (o.from) t.from = true;
+        if (o.p || q.id === 'type') t.lines.push([o.l || o.v, o.p ? (q.id === 'type' ? eur(o.p) : '+' + eur(o.p)) : 'included']);
+        if (o.y) t.lines.push(['Booking system', eur(o.y) + '/yr']);
+      });
+      t.text.push(q.title + ' ' + (q.multi ? v.map(function (o) { return o.v; }).join(', ') : v.v));
+    });
+    t.label = (t.from ? 'from ' : '') + eur(t.total);
+    t.days = a.type ? a.type.days : 0;
+    return t;
+  }
 
   function render() {
-    var a = answers(), list = steps(), cur = list[pos];
+    var a = answers(), list = steps(), cur = list[pos], t = totals(a), qs = list.length - 2;
     [].forEach.call(form.querySelectorAll('.qt__step'), function (f) { f.hidden = f.dataset.step !== cur; });
     document.getElementById('qt-bar').style.width = Math.round(pos / (list.length - 1) * 100) + '%';
-    document.getElementById('qt-count').textContent = cur === 'contact' ? 'Last step' : 'Question ' + (pos + 1) + ' of ' + (list.length - 1);
+    document.getElementById('qt-count').textContent = cur === 'contact' ? 'Last step' : cur === 'review' ? 'Your summary' : 'Question ' + (pos + 1) + ' of ' + qs;
     back.hidden = pos === 0;
     next.hidden = cur === 'contact';
     send.hidden = cur !== 'contact';
     err.textContent = '';
 
-    var total = 0, yearly = 0, from = false, lines = [], text = [];
-    active(a).forEach(function (q) {
-      var v = a[q.id]; if (!v) return;
-      (q.multi ? v : [v]).forEach(function (o) {
-        total += o.p || 0; yearly += o.y || 0; if (o.from) from = true;
-        if (o.p || q.id === 'type') lines.push([o.l || o.v, o.p ? (q.id === 'type' ? eur(o.p) : '+' + eur(o.p)) : 'included']);
-        if (o.y) lines.push(['Booking system', eur(o.y) + '/yr']);
-      });
-      text.push(q.title + ' ' + (q.multi ? v.map(function (o) { return o.v; }).join(', ') : v.v));
-    });
-    var label = (from ? 'from ' : '') + eur(total);
-    document.getElementById('qt-total').textContent = label;
-    document.getElementById('qt-mini').textContent = label + (yearly ? ' + ' + eur(yearly) + '/year' : '');
+    var dayText = t.days ? 'About ' + t.days + ' days' : '';
+    document.getElementById('qt-total').textContent = t.label;
+    document.getElementById('qt-mini').textContent = t.label + (t.yearly ? ' + ' + eur(t.yearly) + '/year' : '');
     var y = document.getElementById('qt-yearly');
-    y.hidden = !yearly; y.textContent = '+ ' + eur(yearly) + ' per year';
-    document.getElementById('qt-lines').innerHTML = lines.length
-      ? lines.map(function (l) { return '<li><span>' + esc(l[0]) + '</span><span>' + l[1] + '</span></li>'; }).join('')
+    y.hidden = !t.yearly; y.textContent = '+ ' + eur(t.yearly) + ' per year';
+    var d = document.getElementById('qt-days');
+    d.hidden = !t.days; d.textContent = 'Ready in: ' + dayText.toLowerCase();
+    document.getElementById('qt-lines').innerHTML = t.lines.length
+      ? t.lines.map(function (l) { return '<li><span>' + esc(l[0]) + '</span><span>' + l[1] + '</span></li>'; }).join('')
       : '<li><span>Choose a website type to start</span><span></span></li>';
-    document.getElementById('qt-answers').value = text.join('\n');
-    document.getElementById('qt-estimate').value = label + ' one-time' + (yearly ? ' + ' + eur(yearly) + ' per year' : '');
+    if (a.type) {
+      document.getElementById('qt-rv-type').textContent = a.type.v;
+      document.getElementById('qt-rv-days').textContent = dayText;
+      document.getElementById('qt-rv-price').textContent = t.label + (t.yearly ? ' + ' + eur(t.yearly) + ' per year' : '');
+    }
+    document.getElementById('qt-answers').value = t.text.join('\n');
+    document.getElementById('qt-estimate').value = t.label + ' one-time' + (t.yearly ? ' + ' + eur(t.yearly) + ' per year' : '') + (t.days ? ' · ' + dayText : '');
   }
 
   function valid() {
@@ -130,14 +131,23 @@
   }
   next.addEventListener('click', function () { go(1); });
   back.addEventListener('click', function () { go(-1); });
-  form.addEventListener('change', function (e) {
+  form.addEventListener('change', render);
+  form.addEventListener('submit', function (e) {
+    var a = answers();
+    if (!a.type) { e.preventDefault(); pos = 0; render(); return; }
     render();
-    if (e.target.type === 'radio') setTimeout(function () { go(1); }, 250);
+    var t = totals(a);
+    try {
+      sessionStorage.setItem('hw-quote', JSON.stringify({
+        email: form.querySelector('[name="contact[email]"]').value, type: a.type.v,
+        price: t.label + (t.yearly ? ' + ' + eur(t.yearly) + '/year' : ''), days: t.days
+      }));
+      sessionStorage.removeItem('hw-next');
+    } catch (x) {}
   });
-  form.addEventListener('submit', function (e) { render(); if (!answers().type) { e.preventDefault(); pos = 0; render(); } });
 
   var pre = new URLSearchParams(location.search).get('type');
-  if (pre !== null && Q[0].opts[+pre]) { form.querySelector('[name=qt_type][value="' + (+pre) + '"]').checked = true; pos = 1; }
+  if (pre !== null && Q[0].opts[+pre]) { form.querySelector('[name=qt_type][value="' + (+pre) + '"]').checked = true; }
   render();
 })();
 </script>

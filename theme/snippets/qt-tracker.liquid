@@ -1,0 +1,30 @@
+{%- comment -%}
+  Project tracker with 4 steps: Quote submitted, Deposit (or Call requested), In production, Website live.
+  Pass p: 1 = quote submitted, 2 = awaiting deposit / call requested, 3 = in production, 4 = website live.
+  Pass call: true to label step 2 "Call requested".
+{%- endcomment -%}
+{%- assign p = p | default: 1 | plus: 0 | at_least: 1 | at_most: 4 -%}
+{%- assign fill = p | minus: 1 | times: 100 | divided_by: 3 -%}
+{%- if call -%}{%- assign label2 = 'Call requested' -%}{%- elsif p > 2 -%}{%- assign label2 = 'Deposit paid' -%}{%- else -%}{%- assign label2 = 'Place €50 deposit' -%}{%- endif -%}
+{%- assign labels = 'Quote submitted|' | append: label2 | append: '|In production|Website live' | split: '|' -%}
+<div class='trk' id='{{ id | default: "trk" }}' data-p='{{ p }}'>
+  <div class='trk__track' aria-hidden='true'><span class='trk__fill' style='--fill: {{ fill }}'></span></div>
+  <ol class='trk__steps'>
+    {%- for label in labels -%}
+      {%- liquid
+        assign i = forloop.index
+        if i == 1 or i < p or p == 4
+          assign state = 'done'
+        elsif i == p
+          assign state = 'current'
+        else
+          assign state = 'todo'
+        endif
+      -%}
+      <li class='trk__step trk__step--{{ state }}'>
+        <span class='trk__dot' aria-hidden='true'><svg class='trk__check' viewBox='0 0 20 20'><path d='M5 10.5l3 3 7-7' fill='none' stroke='currentColor' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/></svg><span class='trk__num'>{{ i }}</span></span>
+        <span class='trk__label'>{{ label }}</span>
+      </li>
+    {%- endfor -%}
+  </ol>
+</div>

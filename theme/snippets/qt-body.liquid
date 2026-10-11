@@ -7,8 +7,8 @@
         Helia&nbsp;<small>Web</small>
       </a>
       <nav class='nav__links' aria-label='Main'>
-        <a href='/#work'>Our work</a>
         <a href='/'>Back to site</a>
+        <a href='/pages/my-project'>My project</a>
         <a class='btn btn--blue nav__cta' href='tel:+35799238575'>Call me</a>
       </nav>
     </div>
@@ -20,17 +20,13 @@
         <div class='qt__head'>
           <span class='eyebrow'>Get a quote</span>
           <h1>Build your price</h1>
-          <p>Answer a few quick questions and see your estimate update as you go. Send it to me and I'll get back to you with a final quote.</p>
+          <p>Answer a few quick questions and see your estimate update as you go.</p>
         </div>
 
         <div class='qt__card'>
           {%- form 'contact', id: 'qt-form' -%}
             {%- if form.posted_successfully? -%}
-              <div class='qt__done' id='qt-done'>
-                <h2>Thanks, your request is in!</h2>
-                <p>I've received your answers and your estimate. I'll get back to you soon with a final quote.</p>
-                <a class='btn btn--blue' href='/'>Back to the website</a>
-              </div>
+              {%- assign qt_done = true -%}
             {%- else -%}
               {%- if form.errors -%}
                 <p class='form__msg form__msg--err' role='alert'>Please check the form: {{ form.errors | default_errors }}</p>
@@ -40,9 +36,18 @@
 
               <div id='qt-steps'></div>
 
+              <fieldset class='qt__step' data-step='review' hidden>
+                <legend>Here's your website</legend>
+                <p class='qt__hint'>Based on what you chose. Click Next to send it to me.</p>
+                <dl class='qt__review'>
+                  <div><dt>Website</dt><dd id='qt-rv-type'></dd></div>
+                  <div><dt>Production time</dt><dd id='qt-rv-days'></dd></div>
+                  <div><dt>Total price</dt><dd id='qt-rv-price'></dd></div>
+                </dl>
+              </fieldset>
+
               <fieldset class='qt__step' data-step='contact' hidden>
                 <legend>Where should I send your quote?</legend>
-                <p class='qt__hint'>I'll reply with a final price and any questions.</p>
                 <div class='fields'>
                   <div class='field'>
                     <label for='qt-name'>Your name</label>
@@ -60,7 +65,7 @@
                     <label for='qt-phone'>Phone</label>
                     <input id='qt-phone' type='tel' name='contact[phone]' autocomplete='tel' value='{{ form.phone }}'>
                   </div>
-                  <div class='field field--full'>
+                  <div class='field'>
                     <label for='qt-notes'>Anything else I should know? (optional)</label>
                     <textarea id='qt-notes' name='contact[body]' placeholder='e.g. your current website, websites you like, your type of business'>{{ form.body }}</textarea>
                   </div>
@@ -73,21 +78,78 @@
               <div class='qt__nav'>
                 <button type='button' class='btn qt__back' id='qt-back' hidden>Back</button>
                 <button type='button' class='btn btn--blue' id='qt-next' style='margin-left:auto'>Next</button>
-                <button type='submit' class='btn btn--yellow' id='qt-send' hidden>Send my quote request</button>
+                <button type='submit' class='btn btn--yellow' id='qt-send' hidden>Send my request</button>
               </div>
               <p class='qt__mini'>Your estimate: <b id='qt-mini'>€0</b></p>
               <noscript><p class='qt__hint'>This quote builder needs JavaScript. You can also call +357 99 238575 or email christodoulos@heliaweb.com.</p></noscript>
             {%- endif -%}
           {%- endform -%}
+
+          {%- if qt_done -%}
+            <div class='qt__done' id='qt-done'>
+              <span class='qt__badge' aria-hidden='true'><svg viewBox='0 0 20 20'><path d='M5 10.5l3 3 7-7' fill='none' stroke='currentColor' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/></svg></span>
+              <h2 id='qt-done-title'>Request submitted!</h2>
+              <p id='qt-done-sum'>I've received your answers and your estimate.</p>
+              {% render 'qt-tracker', p: 1, id: 'qt-trk' %}
+
+              <div id='qt-choice'>
+                <h3>What would you like to do next?</h3>
+                <div class='qt__choices'>
+                  <button type='button' class='qt__choice qt__choice--go' id='qt-go'><strong>Move forward</strong><small>Place a €50 deposit and I'll start on your website.</small></button>
+                  <button type='button' class='qt__choice' id='qt-call'><strong>Request a call</strong><small>Talk it through with me before you decide.</small></button>
+                </div>
+              </div>
+
+              <div class='qt__next' id='qt-pay' hidden>
+                <h3>Great, let's get started!</h3>
+                <p>Place your €50 deposit to book your spot. As soon as it's paid, your website goes into production.</p>
+                <a class='btn btn--yellow' id='qt-pay-link' href='/cart/60096830243200:1'>Pay €50 deposit</a>
+              </div>
+
+              <div class='qt__next' id='qt-callbox' hidden>
+                <h3>When can I call you?</h3>
+                {%- form 'contact', id: 'qt-callform' -%}
+                  <input type='hidden' name='contact[Request]' value='Call request about a website quote'>
+                  <div class='fields'>
+                    <div class='field'>
+                      <label for='qc-email'>Email</label>
+                      <input id='qc-email' type='email' name='contact[email]' autocomplete='email' required>
+                    </div>
+                    <div class='field'>
+                      <label for='qc-phone'>Phone number</label>
+                      <input id='qc-phone' type='tel' name='contact[phone]' autocomplete='tel' required>
+                    </div>
+                    <div class='field'>
+                      <label for='qc-time'>Best time to call</label>
+                      <select id='qc-time' name='contact[Best time to call]'>
+                        <option>Morning</option><option>Afternoon</option><option>Evening</option><option>Any time</option>
+                      </select>
+                    </div>
+                  </div>
+                  <button type='submit' class='btn btn--blue'>Request a call</button>
+                {%- endform -%}
+              </div>
+
+              <div class='qt__next' id='qt-called' hidden>
+                <h3>Call requested</h3>
+                <p>I'll call you soon to talk about your website. Ready to go ahead before then? You can place your deposit any time.</p>
+                <a class='btn btn--ghost qt__deposit' href='/cart/60096830243200:1'>Pay €50 deposit</a>
+              </div>
+
+              <p class='qt__track'>Follow your project any time on <a href='/pages/my-project'>My project</a>. Sign in with the email you used here.</p>
+            </div>
+            {% render 'qt-done-script' %}
+          {%- endif -%}
         </div>
       </div>
 
-      <aside class='qt__summary' aria-label='Your estimate'>
+      <aside class='qt__summary' aria-label='Your estimate'{% if qt_done %} hidden{% endif %}>
         <small>Your estimate</small>
         <div class='qt__total' id='qt-total'>€0</div>
         <div class='qt__yearly' id='qt-yearly' hidden></div>
+        <div class='qt__days' id='qt-days' hidden></div>
         <ul class='qt__lines' id='qt-lines'><li><span>Choose a website type to start</span><span></span></li></ul>
-        <p class='qt__note' id='qt-note'>This is an estimate. Your final price is confirmed after a short chat, before any work starts.</p>
+        <p class='qt__note'>This is an estimate. Your final price is confirmed before any work starts.</p>
         <p class='qt__call'>Prefer to talk? Call <a href='tel:+35799238575'>+357 99 238575</a> or <a href='tel:+306945894472'>+30 694 589 4472</a></p>
       </aside>
     </div>
