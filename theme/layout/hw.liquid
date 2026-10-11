@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <meta name='theme-color' content='#2c52e8'>
+  <meta name='robots' content='noindex'>
+  <title>{{ page_title }} — Helia Web</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232c52e8'/%3E%3Cpath d='M17 14h8.2v14.3c2.1-2.8 5-4.2 8.6-4.2 6.1 0 9.6 4 9.6 10.7V50h-8.2V36.6c0-3.6-1.6-5.5-4.6-5.5-3.3 0-5.4 2.3-5.4 6.2V50H17z' fill='%23fff'/%3E%3Ccircle cx='50.5' cy='45.8' r='4.4' fill='%23f5b83d'/%3E%3C/svg%3E">
+  <link rel='preconnect' href='https://fonts.googleapis.com'>
+  <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
+  <link href='https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap' rel='stylesheet'>
+  <style>html, body { margin: 0; padding: 0; } body { background: #f2f4f8; }</style>
+  {{ content_for_header }}
+</head>
+<body>
+  {% render 'hw-styles-1' %}
+  {% render 'hw-styles-2' %}
+  {% render 'qt-styles' %}
+  {{ content_for_layout }}
+</body>
+</html>

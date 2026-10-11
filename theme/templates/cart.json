@@ -1,0 +1,10 @@
+{
+  "layout": "hw",
+  "sections": {
+    "main": {
+      "type": "hw-cart",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

@@ -95,6 +95,7 @@
             <div class='pj__msg'><small>Message from Helia Web</small><p>{{ msg | newline_to_br }}</p></div>
           {%- endif -%}
 
+          {%- if p < 3 -%}<p class='qt__hint' style='margin-top: 1.25rem'>The €50 deposit is taken off your website's total price on your final bill.</p>{%- endif -%}
           <div class='pj__actions'>
             {%- if p < 3 -%}
               <a class='btn btn--yellow' href='/cart/60096830243200:1?checkout[email]={{ customer.email | url_encode }}'>Pay €50 deposit</a>
