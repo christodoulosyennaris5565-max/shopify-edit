@@ -1,0 +1,48 @@
+<style>
+  .hw.qt-page { background: var(--mist); min-height: 100vh; }
+  .hw .qt { padding-block: clamp(2rem, 6vw, 4rem) clamp(3rem, 8vw, 5rem); }
+  .hw .qt__grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: clamp(1.25rem, 3vw, 2.5rem); align-items: start; }
+  .hw .qt__head h1 { font-size: clamp(2rem, 5vw, 3rem); }
+  .hw .qt__head p { color: var(--muted); margin-top: 0.75rem; max-width: 52ch; }
+  .hw .qt__card { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: clamp(1.25rem, 4vw, 2.25rem); margin-top: 1.75rem; }
+  .hw .qt__progress { height: 6px; background: var(--blue-soft); border-radius: 999px; overflow: hidden; }
+  .hw .qt__progress span { display: block; height: 100%; width: 0; background: var(--blue); border-radius: 999px; transition: width 0.35s var(--ease); }
+  .hw .qt__count { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-top: 0.75rem; }
+  .hw .qt__step { border: 0; padding: 0; margin: 1.25rem 0 0; min-width: 0; }
+  .hw .qt__step[hidden] { display: none; }
+  .hw .qt__step legend { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.35rem, 3vw, 1.75rem); letter-spacing: -0.02em; line-height: 1.15; padding: 0; }
+  .hw .qt__hint { color: var(--muted); font-size: 0.95rem; margin-top: 0.4rem; }
+  .hw .qt__opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.75rem; margin-top: 1.25rem; }
+  .hw .qt__opt { position: relative; display: flex; flex-direction: column; gap: 0.3rem; border: 1.5px solid var(--line); border-radius: 14px; padding: 1rem 1.1rem; cursor: pointer; background: #fff; transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s var(--ease); }
+  .hw .qt__opt:hover { border-color: #b9c6f7; transform: translateY(-1px); }
+  .hw .qt__opt input { position: absolute; opacity: 0; pointer-events: none; }
+  .hw .qt__opt:has(input:checked) { border-color: var(--blue); background: var(--blue-soft); }
+  .hw .qt__opt:has(input:focus-visible) { outline: 3px solid var(--yellow); outline-offset: 2px; }
+  .hw .qt__opt-top { display: flex; justify-content: space-between; gap: 0.75rem; align-items: baseline; }
+  .hw .qt__opt strong { font-size: 1rem; }
+  .hw .qt__price { font-family: var(--font-mono); font-size: 0.82rem; color: var(--blue); white-space: nowrap; }
+  .hw .qt__opt small { color: var(--muted); font-size: 0.88rem; line-height: 1.45; }
+  .hw .qt__tag { align-self: flex-start; font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; background: var(--yellow); color: var(--ink); padding: 0.15rem 0.45rem; border-radius: 999px; }
+  .hw .qt__nav { display: flex; justify-content: space-between; gap: 0.75rem; margin-top: 1.75rem; }
+  .hw .qt__nav .btn[hidden] { display: none; }
+  .hw .qt__back { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+  .hw .qt__err { color: #9b2620; font-size: 0.92rem; margin-top: 0.9rem; min-height: 1.2em; }
+  .hw .qt .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin-top: 1.25rem; }
+  .hw .qt__summary { position: sticky; top: 86px; background: var(--navy); color: #fff; border-radius: 20px; padding: 1.5rem; }
+  .hw .qt__summary small { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: #b9c1d9; }
+  .hw .qt__total { font-family: var(--font-display); font-weight: 800; font-size: 2.6rem; letter-spacing: -0.03em; line-height: 1.1; margin-top: 0.3rem; }
+  .hw .qt__yearly { color: var(--yellow); font-weight: 600; margin-top: 0.2rem; }
+  .hw .qt__lines { margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.14); display: grid; gap: 0.5rem; font-size: 0.9rem; }
+  .hw .qt__lines li { display: flex; justify-content: space-between; gap: 1rem; color: #d6dcef; }
+  .hw .qt__lines li span:last-child { font-family: var(--font-mono); font-size: 0.8rem; color: #fff; white-space: nowrap; }
+  .hw .qt__note { margin-top: 1rem; font-size: 0.82rem; color: #b9c1d9; line-height: 1.5; }
+  .hw .qt__call { display: block; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.14); font-size: 0.9rem; color: #d6dcef; }
+  .hw .qt__call a { color: #fff; font-weight: 600; }
+  .hw .qt__done { text-align: center; padding-block: 2rem; }
+  .hw .qt__done h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
+  .hw .qt__done p { color: var(--muted); margin: 0.75rem auto 1.5rem; max-width: 46ch; }
+  .hw .qt__mini { display: none; margin-top: 1rem; font-size: 0.92rem; color: var(--muted); }
+  .hw .qt__mini b { color: var(--ink); }
+  @media (max-width: 900px) { .hw .qt__grid { grid-template-columns: 1fr; } .hw .qt__summary { position: static; } .hw .qt__mini { display: block; } }
+  @media (max-width: 520px) { .hw .qt .fields { grid-template-columns: 1fr; } .hw .qt__opts { grid-template-columns: 1fr; } }
+</style>

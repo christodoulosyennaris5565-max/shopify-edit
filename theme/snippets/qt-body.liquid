@@ -1,0 +1,95 @@
+<div class='hw qt-page'>
+  <a class='skip' href='#qt-main'>Skip to content</a>
+  <header class='nav'>
+    <div class='wrap nav__inner'>
+      <a class='brand' href='/' aria-label='Helia Web home'>
+        <svg class='brand__mark' viewBox='0 0 64 64' aria-hidden='true'><rect width='64' height='64' rx='14' fill='#2c52e8'/><path d='M17 14h8.2v14.3c2.1-2.8 5-4.2 8.6-4.2 6.1 0 9.6 4 9.6 10.7V50h-8.2V36.6c0-3.6-1.6-5.5-4.6-5.5-3.3 0-5.4 2.3-5.4 6.2V50H17z' fill='#fff'/><circle cx='50.5' cy='45.8' r='4.4' fill='#f5b83d'/></svg>
+        Helia&nbsp;<small>Web</small>
+      </a>
+      <nav class='nav__links' aria-label='Main'>
+        <a href='/#work'>Our work</a>
+        <a href='/'>Back to site</a>
+        <a class='btn btn--blue nav__cta' href='tel:+35799238575'>Call me</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id='qt-main' class='qt'>
+    <div class='wrap qt__grid'>
+      <div>
+        <div class='qt__head'>
+          <span class='eyebrow'>Get a quote</span>
+          <h1>Build your price</h1>
+          <p>Answer a few quick questions and see your estimate update as you go. Send it to me and I'll get back to you with a final quote.</p>
+        </div>
+
+        <div class='qt__card'>
+          {%- form 'contact', id: 'qt-form' -%}
+            {%- if form.posted_successfully? -%}
+              <div class='qt__done' id='qt-done'>
+                <h2>Thanks, your request is in!</h2>
+                <p>I've received your answers and your estimate. I'll get back to you soon with a final quote.</p>
+                <a class='btn btn--blue' href='/'>Back to the website</a>
+              </div>
+            {%- else -%}
+              {%- if form.errors -%}
+                <p class='form__msg form__msg--err' role='alert'>Please check the form: {{ form.errors | default_errors }}</p>
+              {%- endif -%}
+              <div class='qt__progress' aria-hidden='true'><span id='qt-bar'></span></div>
+              <p class='qt__count' id='qt-count' aria-live='polite'></p>
+
+              <div id='qt-steps'></div>
+
+              <fieldset class='qt__step' data-step='contact' hidden>
+                <legend>Where should I send your quote?</legend>
+                <p class='qt__hint'>I'll reply with a final price and any questions.</p>
+                <div class='fields'>
+                  <div class='field'>
+                    <label for='qt-name'>Your name</label>
+                    <input id='qt-name' type='text' name='contact[name]' autocomplete='name' required value='{{ form.name }}'>
+                  </div>
+                  <div class='field'>
+                    <label for='qt-biz'>Business name</label>
+                    <input id='qt-biz' type='text' name='contact[Business name]' autocomplete='organization'>
+                  </div>
+                  <div class='field'>
+                    <label for='qt-email'>Email</label>
+                    <input id='qt-email' type='email' name='contact[email]' autocomplete='email' required value='{{ form.email }}'>
+                  </div>
+                  <div class='field'>
+                    <label for='qt-phone'>Phone</label>
+                    <input id='qt-phone' type='tel' name='contact[phone]' autocomplete='tel' value='{{ form.phone }}'>
+                  </div>
+                  <div class='field field--full'>
+                    <label for='qt-notes'>Anything else I should know? (optional)</label>
+                    <textarea id='qt-notes' name='contact[body]' placeholder='e.g. your current website, websites you like, your type of business'>{{ form.body }}</textarea>
+                  </div>
+                </div>
+                <input type='hidden' name='contact[Quote answers]' id='qt-answers'>
+                <input type='hidden' name='contact[Estimate]' id='qt-estimate'>
+              </fieldset>
+
+              <p class='qt__err' id='qt-err' role='alert'></p>
+              <div class='qt__nav'>
+                <button type='button' class='btn qt__back' id='qt-back' hidden>Back</button>
+                <button type='button' class='btn btn--blue' id='qt-next' style='margin-left:auto'>Next</button>
+                <button type='submit' class='btn btn--yellow' id='qt-send' hidden>Send my quote request</button>
+              </div>
+              <p class='qt__mini'>Your estimate: <b id='qt-mini'>€0</b></p>
+              <noscript><p class='qt__hint'>This quote builder needs JavaScript. You can also call +357 99 238575 or email christodoulos@heliaweb.com.</p></noscript>
+            {%- endif -%}
+          {%- endform -%}
+        </div>
+      </div>
+
+      <aside class='qt__summary' aria-label='Your estimate'>
+        <small>Your estimate</small>
+        <div class='qt__total' id='qt-total'>€0</div>
+        <div class='qt__yearly' id='qt-yearly' hidden></div>
+        <ul class='qt__lines' id='qt-lines'><li><span>Choose a website type to start</span><span></span></li></ul>
+        <p class='qt__note' id='qt-note'>This is an estimate. Your final price is confirmed after a short chat, before any work starts.</p>
+        <p class='qt__call'>Prefer to talk? Call <a href='tel:+35799238575'>+357 99 238575</a> or <a href='tel:+306945894472'>+30 694 589 4472</a></p>
+      </aside>
+    </div>
+  </main>
+</div>
