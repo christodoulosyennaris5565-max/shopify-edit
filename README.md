@@ -17,3 +17,13 @@ Prices: static websites from €650 one-time, apps from €1,000. Shops/payments
 - `/pages/my-project` (`templates/page.project.liquid`, `snippets/pj-body.liquid`): clients sign in with their email (one-time code) and see their stage.
 - Stages come from the customer metafield **Project stage** (Shopify admin > Customers > customer > Metafields): Quote submitted, Call requested, Awaiting deposit, In production, Website live. Paying the "Website deposit" product moves a client to In production automatically.
 - Other customer metafields shown to the client: Project type, Final quote, Message to client.
+
+## Publishing changes
+
+The live theme can't be edited directly. Each round of changes goes into a copy of the live theme (named "Helia Web — update: ..."), which is published from Online Store > Themes.
+
+`layout/theme.liquid` is the default layout. Shopify uses it for system pages such as the spam check shown after a form is sent, so it carries the Helia Web header and footer. `layout/hw.liquid` is used by the cart page.
+
+## Checkout colors
+
+Set through the Checkout Branding API: logo, main background #F2F4F8, order summary background #141B2E, brand and accent #2C52E8. The Basic plan doesn't allow other color fields, or hiding the cart link, through the API.
