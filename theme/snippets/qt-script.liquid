@@ -1,12 +1,12 @@
 <script>
 (function () {
-  /* Questions and prices. p = one-time price from (€), y = yearly price (€), m = monthly price (€), days = production time, name = website name in the summary. */
+  /* Questions and prices. p = one-time price from (€), y = yearly price (€), m = monthly price (€), days = production time, h = title lines on the card, name = website name in the summary. */
   var Q = [
     { id: 'type', title: 'Which type of website do you need?', hint: 'Pick the one closest to what you have in mind.', opts: [
       { v: 'Static website', p: 450, days: 5, tag: 'Most popular', d: 'Pages that present your business: services, menu, gallery, opening hours and contact.' },
       { v: 'Animated website', p: 750, days: 8, d: 'Everything in a static website, plus smooth scroll animations and motion effects.' },
-      { v: 'Website with online bookings', p: 450, y: 250, days: 5, bookings: 1, d: 'A static website plus an online booking system. The booking system is €250 per year.' },
-      { v: 'Website with payments or an online shop', p: 800, m: 55, days: 15, pay: 1, d: 'Take payments or sell products online. €55 per month (€660 per year) covers the payment and shop system.' }
+      { v: 'Website with online bookings', h: ['Website with', 'online bookings'], p: 450, y: 250, days: 5, bookings: 1, d: 'A static website plus an online booking system. The booking system is €250 per year.' },
+      { v: 'Website with payments', h: ['Website with', 'payments'], p: 800, m: 55, days: 15, pay: 1, d: 'Take payments or sell products online. €55 per month (€660 per year) covers the payment and shop system.' }
     ] },
     { id: 'book', title: 'What will customers book?', when: function (a) { return a.type && a.type.bookings; }, opts: [
       { v: 'Tables (restaurant or café)' }, { v: 'Appointments (barber, salon, dentist)' }, { v: 'Rooms or stays' }, { v: 'Classes or sessions' }, { v: 'Something else' }
@@ -47,12 +47,12 @@
   Q.forEach(function (q) {
     var f = document.createElement('fieldset');
     f.className = 'qt__step'; f.hidden = true; f.dataset.step = q.id;
-    var h = '<legend>' + esc(q.title) + '</legend>' + (q.hint ? '<p class="qt__hint">' + esc(q.hint) + '</p>' : '') + '<div class="qt__opts">';
+    var h = '<legend>' + esc(q.title) + '</legend>' + (q.hint ? '<p class="qt__hint">' + esc(q.hint) + '</p>' : '') + '<div class="qt__opts qt__opts--' + q.id + '">';
     q.opts.forEach(function (o, i) {
       var price = q.id === 'type' ? 'from ' + eur(o.p) + (o.y ? ' + ' + eur(o.y) + '/yr' : o.m ? ' + ' + eur(o.m) + '/mo' : '') : o.p ? '+' + eur(o.p) : '';
       h += '<label class="qt__opt"><input type="' + (q.multi ? 'checkbox' : 'radio') + '" name="qt_' + q.id + '" value="' + i + '">' +
         (o.tag ? '<span class="qt__tag">' + esc(o.tag) + '</span>' : '') +
-        '<span class="qt__opt-top"><strong>' + esc(o.v) + '</strong><span class="qt__price">' + price + '</span></span>' +
+        '<span class="qt__opt-top"><strong>' + (o.h ? o.h.map(esc).join('<br>') : esc(o.v)) + '</strong><span class="qt__price">' + price + '</span></span>' +
         (o.d ? '<small>' + esc(o.d) + '</small>' : '') + '</label>';
     });
     f.innerHTML = h + '</div>';
@@ -88,7 +88,7 @@
       });
       t.text.push(q.title + ' ' + (q.multi ? v.map(function (o) { return o.v; }).join(', ') : v.v));
     });
-    t.label = 'from ' + eur(t.total);
+    t.label = (t.total ? 'from ' : '') + eur(t.total);
     t.extra = t.monthly ? eur(t.monthly) + ' per month (' + eur(t.yearly) + ' per year)' : t.yearly ? eur(t.yearly) + ' per year' : '';
     t.short = t.monthly ? eur(t.monthly) + '/month' : t.yearly ? eur(t.yearly) + '/year' : '';
     t.days = a.type ? a.type.days : 0;

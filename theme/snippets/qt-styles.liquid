@@ -1,7 +1,7 @@
 <style>
   .hw.qt-page { background: var(--mist); min-height: 100vh; }
   .hw .qt { padding-block: clamp(2rem, 6vw, 4rem) clamp(3rem, 8vw, 5rem); }
-  .hw .qt__grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: clamp(1.25rem, 3vw, 2.5rem); align-items: start; }
+  .hw .qt__grid { display: grid; grid-template-columns: minmax(0, 1fr) 310px; gap: clamp(1.25rem, 3vw, 2.5rem); align-items: start; max-width: 1240px; }
   .hw .qt__head h1 { font-size: clamp(2rem, 5vw, 3rem); }
   .hw .qt__head p { color: var(--muted); margin-top: 0.75rem; max-width: 52ch; }
   .hw .qt__card { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: clamp(1.25rem, 4vw, 2.25rem); margin-top: 1.75rem; }
@@ -20,6 +20,9 @@
   .hw .qt__opt:has(input:focus-visible) { outline: 3px solid var(--yellow); outline-offset: 2px; }
   .hw .qt__opt-top { display: flex; justify-content: space-between; gap: 0.75rem; align-items: baseline; }
   .hw .qt__opt strong { font-size: 1rem; }
+  .hw .qt__opts--type { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hw .qt__opts--type .qt__opt-top { flex-direction: column; align-items: flex-start; gap: 0.35rem; }
+  .hw .qt__opts--type strong { font-size: 1.08rem; line-height: 1.3; }
   .hw .qt__price { font-family: var(--font-mono); font-size: 0.82rem; color: var(--blue); white-space: nowrap; }
   .hw .qt__opt small { color: var(--muted); font-size: 0.88rem; line-height: 1.45; }
   .hw .qt__tag { align-self: flex-start; font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; background: var(--yellow); color: var(--ink); padding: 0.15rem 0.45rem; border-radius: 999px; }
