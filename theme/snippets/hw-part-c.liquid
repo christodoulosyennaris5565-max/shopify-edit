@@ -1,0 +1,76 @@
+    <section class='section section--navy' id='contact'>
+      <div class='wrap contact__grid'>
+        <div>
+          <div class='section-head'>
+            <span class='eyebrow'>Contact</span>
+            <h2>Let's build yours.</h2>
+            <p>Call, email or send a message. Tell me what kind of website or app you need, and I'll reply with a quote.</p>
+          </div>
+          <div class='contact__cards'>
+            <a class='ccard' href='tel:+35799238575'>
+              <span class='ccard__icon'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z'/></svg></span>
+              <span><small>Call · Cyprus</small><strong>+357 99 238575</strong></span>
+            </a>
+            <a class='ccard' href='tel:+306945894472'>
+              <span class='ccard__icon'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z'/></svg></span>
+              <span><small>Call · Greece</small><strong>+30 694 589 4472</strong></span>
+            </a>
+            <a class='ccard' href='mailto:christodoulos@heliaweb.com?subject=Website%20enquiry'>
+              <span class='ccard__icon'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><rect x='2' y='4' width='20' height='16' rx='2'/><path d='M22 6l-10 7L2 6'/></svg></span>
+              <span><small>Email</small><strong>christodoulos@heliaweb.com</strong></span>
+            </a>
+          </div>
+        </div>
+
+        <div class='form' id='enquiry'>
+          <h3>Send a message</h3>
+          <p>Tell me a little about your project and I'll get back to you.</p>
+          {%- form 'contact', id: 'hw-contact' -%}
+            {%- if form.posted_successfully? -%}
+              <div class='form__msg form__msg--ok' role='status'>Thanks! Your message has been sent. I'll get back to you soon.</div>
+            {%- elsif form.errors -%}
+              <div class='form__msg form__msg--err' role='alert'>Please check the form: {{ form.errors | default_errors }}</div>
+            {%- endif -%}
+            <div class='fields'>
+              <div class='field'>
+                <label for='hw-name'>Name</label>
+                <input id='hw-name' type='text' name='contact[name]' autocomplete='name' required value='{{ form.name }}'>
+              </div>
+              <div class='field'>
+                <label for='hw-phone'>Phone</label>
+                <input id='hw-phone' type='tel' name='contact[phone]' autocomplete='tel' value='{{ form.phone }}'>
+              </div>
+              <div class='field field--full'>
+                <label for='hw-email'>Email</label>
+                <input id='hw-email' type='email' name='contact[email]' autocomplete='email' required value='{{ form.email }}'>
+              </div>
+              <div class='field field--full'>
+                <label for='hw-type'>What do you need?</label>
+                <select id='hw-type' name='contact[Project type]'>
+                  <option>Static website (from €650)</option>
+                  <option>App (from €1,000)</option>
+                  <option>Website with online booking</option>
+                  <option>Online shop / payments</option>
+                  <option>Not sure yet</option>
+                </select>
+              </div>
+              <div class='field field--full'>
+                <label for='hw-msg'>Tell me about your business</label>
+                <textarea id='hw-msg' name='contact[body]' required>{{ form.body }}</textarea>
+              </div>
+            </div>
+            <button class='btn btn--yellow btn--block' type='submit'>Send message</button>
+          {%- endform -%}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class='footer'>
+    <div class='wrap footer__inner'>
+      <span class='brand'>Helia&nbsp;<small>Web</small></span>
+      <span>Websites from €650 · Apps from €1,000</span>
+      <span><a href='mailto:christodoulos@heliaweb.com'>christodoulos@heliaweb.com</a> · © {{ 'now' | date: '%Y' }} Helia Web</span>
+    </div>
+  </footer>
+</div>

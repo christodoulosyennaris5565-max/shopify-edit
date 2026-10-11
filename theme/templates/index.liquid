@@ -1,0 +1,35 @@
+{% layout none %}
+<!doctype html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <meta name='theme-color' content='#2c52e8'>
+
+  <title>Helia Web — websites from €650, apps from €1,000</title>
+  <meta name='description' content='Helia Web designs and builds websites and apps for local businesses. Static websites from €650 one-time, apps from €1,000. Restaurants, barbers, salons, dentists and more. Call or email for a quote.'>
+  <meta property='og:type' content='website'>
+  <meta property='og:title' content='Helia Web — websites from €650, apps from €1,000'>
+  <meta property='og:description' content='Websites and apps for local businesses. One-time fee, no monthly surprises.'>
+  <meta property='og:url' content='{{ canonical_url }}'>
+  <meta name='twitter:card' content='summary_large_image'>
+
+  <link rel='canonical' href='{{ canonical_url }}'>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232c52e8'/%3E%3Cpath d='M17 14h8.2v14.3c2.1-2.8 5-4.2 8.6-4.2 6.1 0 9.6 4 9.6 10.7V50h-8.2V36.6c0-3.6-1.6-5.5-4.6-5.5-3.3 0-5.4 2.3-5.4 6.2V50H17z' fill='%23fff'/%3E%3Ccircle cx='50.5' cy='45.8' r='4.4' fill='%23f5b83d'/%3E%3C/svg%3E">
+
+  <link rel='preconnect' href='https://fonts.googleapis.com'>
+  <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
+  <link href='https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap' rel='stylesheet'>
+
+  <style>
+    html, body { margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: #ffffff; }
+  </style>
+
+  {{ content_for_header }}
+</head>
+<body>
+  {% section 'heliaweb' %}
+</body>
+</html>
