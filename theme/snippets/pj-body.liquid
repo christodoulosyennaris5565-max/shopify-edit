@@ -13,6 +13,7 @@
       <nav class='nav__links' aria-label='Main'>
         <a href='/'>Back to site</a>
         {%- if customer -%}<a href='{{ routes.account_logout_url }}'>Sign out</a>{%- endif -%}
+        {% render 'hw-lang' %}
         <a class='btn btn--blue nav__cta' href='tel:+35799238575'>Call me</a>
       </nav>
     </div>

@@ -1,16 +1,23 @@
 {% layout none %}
 <!doctype html>
-<html lang='en'>
+<html lang='{{ request.locale.iso_code }}'>
 <head>
   <meta charset='utf-8'>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <meta name='theme-color' content='#2c52e8'>
 
+  {%- if request.locale.iso_code == 'el' -%}
+  <title>Helia Web — ιστοσελίδες από €450, εφαρμογές από €1.000</title>
+  <meta name='description' content='Η Helia Web σχεδιάζει και κατασκευάζει ιστοσελίδες και εφαρμογές για τοπικές επιχειρήσεις. Στατικές ιστοσελίδες από €450 εφάπαξ, εφαρμογές από €1.000. Εστιατόρια, κουρεία, κομμωτήρια, οδοντίατροι και άλλα.'>
+  <meta property='og:title' content='Helia Web — ιστοσελίδες από €450, εφαρμογές από €1.000'>
+  <meta property='og:description' content='Ιστοσελίδες και εφαρμογές για τοπικές επιχειρήσεις. Εφάπαξ τιμή, χωρίς μηνιαίες εκπλήξεις.'>
+  {%- else -%}
   <title>Helia Web — websites from €450, apps from €1,000</title>
   <meta name='description' content='Helia Web designs and builds websites and apps for local businesses. Static websites from €450 one-time, apps from €1,000. Restaurants, barbers, salons, dentists and more. Call or email for a quote.'>
-  <meta property='og:type' content='website'>
   <meta property='og:title' content='Helia Web — websites from €450, apps from €1,000'>
   <meta property='og:description' content='Websites and apps for local businesses. One-time fee, no monthly surprises.'>
+  {%- endif -%}
+  <meta property='og:type' content='website'>
   <meta property='og:url' content='{{ canonical_url }}'>
   <meta name='twitter:card' content='summary_large_image'>
 

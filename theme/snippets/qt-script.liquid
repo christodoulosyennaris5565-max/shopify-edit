@@ -13,9 +13,9 @@
     ] },
     { id: 'paykind', title: 'What do you need it for?', when: function (a) { return a.type && a.type.pay; }, opts: [
       { v: 'Taking payments', name: 'Website with payments', d: 'For example deposits, bookings, services or invoices.' },
-      { v: 'Selling products in an online shop', name: 'Website for an online shop', d: 'A shop where customers browse products and buy online.' }
+      { v: 'Selling products in an online shop', name: 'Website for an online shop', shop: 1, d: 'A shop where customers browse products and buy online.' }
     ] },
-    { id: 'products', title: 'How many products will you sell?', hint: 'This helps me prepare your final quote.', when: function (a) { return a.paykind && a.paykind.name === 'Website for an online shop'; }, opts: [
+    { id: 'products', title: 'How many products will you sell?', hint: 'This helps me prepare your final quote.', when: function (a) { return a.paykind && a.paykind.shop; }, opts: [
       { v: 'Up to 20' }, { v: '20 to 100' }, { v: 'More than 100' }
     ] },
     { id: 'pages', title: 'How many pages do you need?', hint: 'A typical site has Home, About, Services, Gallery and Contact.', opts: [
@@ -36,12 +36,56 @@
     ] }
   ];
 
+  /* Greek wording, used on /el. Same order as the questions and answers above; prices stay above. */
+  var EL = {{ request.locale.iso_code | json }} === 'el';
+  var GR = {
+    type: ['Τι είδους ιστοσελίδα χρειάζεστε;', 'Επιλέξτε αυτή που ταιριάζει περισσότερο σε ό,τι έχετε στο μυαλό σας.', [
+      { v: 'Στατική ιστοσελίδα', tag: 'Η πιο δημοφιλής', d: 'Σελίδες που παρουσιάζουν την επιχείρησή σας: υπηρεσίες, μενού, γκαλερί, ωράριο και επικοινωνία.' },
+      { v: 'Ιστοσελίδα με animation', d: 'Ό,τι έχει μια στατική ιστοσελίδα, συν ομαλά εφέ κίνησης καθώς κάνετε scroll.' },
+      { v: 'Ιστοσελίδα με online κρατήσεις', h: ['Ιστοσελίδα με', 'online κρατήσεις'], d: 'Στατική ιστοσελίδα με σύστημα online κρατήσεων. Το σύστημα κρατήσεων κοστίζει €250 τον χρόνο.' },
+      { v: 'Ιστοσελίδα με πληρωμές', h: ['Ιστοσελίδα με', 'πληρωμές'], d: 'Δεχτείτε πληρωμές ή πουλήστε προϊόντα online. €55 τον μήνα (€660 τον χρόνο) για το σύστημα πληρωμών και e-shop.' }]],
+    book: ['Τι θα κλείνουν οι πελάτες σας;', '', [
+      { v: 'Τραπέζια (εστιατόριο ή καφέ)' }, { v: 'Ραντεβού (κουρείο, κομμωτήριο, οδοντίατρος)' }, { v: 'Δωμάτια ή διαμονή' }, { v: 'Μαθήματα ή συνεδρίες' }, { v: 'Κάτι άλλο' }]],
+    paykind: ['Για ποιο σκοπό τη χρειάζεστε;', '', [
+      { v: 'Για να δέχομαι πληρωμές', name: 'Ιστοσελίδα με πληρωμές', d: 'Για παράδειγμα προκαταβολές, κρατήσεις, υπηρεσίες ή τιμολόγια.' },
+      { v: 'Για να πουλάω προϊόντα σε e-shop', name: 'Ιστοσελίδα για e-shop', d: 'Ένα κατάστημα όπου οι πελάτες βλέπουν προϊόντα και αγοράζουν online.' }]],
+    products: ['Πόσα προϊόντα θα πουλάτε;', 'Αυτό με βοηθά να ετοιμάσω την τελική προσφορά.', [
+      { v: 'Έως 20' }, { v: '20 έως 100' }, { v: 'Περισσότερα από 100' }]],
+    pages: ['Πόσες σελίδες χρειάζεστε;', 'Μια τυπική ιστοσελίδα έχει Αρχική, Σχετικά, Υπηρεσίες, Γκαλερί και Επικοινωνία.', [
+      { v: '1 έως 5 σελίδες', d: 'Περιλαμβάνεται στην τιμή' }, { v: '6 έως 10 σελίδες', l: 'Επιπλέον σελίδες (6 έως 10)' }, { v: 'Περισσότερες από 10 σελίδες', l: 'Επιπλέον σελίδες (10+)' }]],
+    lang: ['Σε πόσες γλώσσες;', '', [
+      { v: '1 ή 2 γλώσσες', d: 'Περιλαμβάνεται στην τιμή. Για παράδειγμα ελληνικά και αγγλικά.' }, { v: '3 ή περισσότερες γλώσσες', l: 'Επιπλέον γλώσσες (3+)' }]],
+    photos: ['Έχετε δικές σας φωτογραφίες;', 'Γράφω εγώ όλα τα κείμενα της ιστοσελίδας σας, μέσα στην τιμή.', [
+      { v: 'Ναι, έχω δικές μου φωτογραφίες', d: 'Περιλαμβάνεται' }, { v: 'Όχι, προσθέστε φωτογραφίες εσείς', d: 'Περιλαμβάνεται' }, { v: 'Έχω κάποιες, αλλά χρειάζομαι κι άλλες', d: 'Περιλαμβάνεται' }]],
+    extras: ['Θέλετε κάποια επιπλέον;', 'Επιλέξτε όσα θέλετε ή κανένα.', [
+      { v: 'Google Maps & κριτικές', d: 'Περιλαμβάνεται' }, { v: 'Κουμπί συνομιλίας WhatsApp', d: 'Περιλαμβάνεται' },
+      { v: 'Ρύθμιση προφίλ Google Business' }, { v: 'Εγγραφή στο newsletter' }]],
+    domain: ['Έχετε ήδη domain;', 'Για παράδειγμα yourbusiness.com', [
+      { v: 'Ναι, έχω' }, { v: 'Όχι, βοηθήστε με να πάρω ένα' }, { v: 'Δεν είμαι σίγουρος/η' }]]
+  };
+  var T = EL ? {
+    from: 'από ', yr: '/χρόνο', mo: '/μήνα', perYear: ' τον χρόνο', perMonth: ' τον μήνα', oneTime: ' εφάπαξ', included: 'περιλαμβάνεται',
+    booking: 'Σύστημα κρατήσεων', payment: 'Σύστημα πληρωμών', shopSys: 'Σύστημα e-shop', start: 'Επιλέξτε είδος ιστοσελίδας για να ξεκινήσετε',
+    last: 'Τελευταίο βήμα', summary: 'Σύνοψη', question: function (n, of) { return 'Ερώτηση ' + n + ' από ' + of; },
+    about: function (d) { return 'Περίπου ' + d + ' ημέρες'; }, ready: 'Έτοιμη σε: ', choose: 'Επιλέξτε μια απάντηση για να συνεχίσετε.', locale: 'el-GR'
+  } : {
+    from: 'from ', yr: '/yr', mo: '/mo', perYear: ' per year', perMonth: ' per month', oneTime: ' one-time', included: 'included',
+    booking: 'Booking system', payment: 'Payment system', shopSys: 'Shop system', start: 'Choose a website type to start',
+    last: 'Last step', summary: 'Your summary', question: function (n, of) { return 'Question ' + n + ' of ' + of; },
+    about: function (d) { return 'About ' + d + ' days'; }, ready: 'Ready in: ', choose: 'Please choose an option to continue.', locale: 'en-US'
+  };
+  if (EL) Q.forEach(function (q) {
+    var g = GR[q.id]; if (!g) return;
+    q.title = g[0]; q.hint = g[1];
+    q.opts.forEach(function (o, i) { var t = g[2][i]; if (!t) return; ['v', 'd', 'h', 'tag', 'l', 'name'].forEach(function (k) { if (k in t) o[k] = t[k]; else if (k !== 'v' && k !== 'name') delete o[k]; }); });
+  });
+
   var form = document.getElementById('qt-form');
   if (!form || document.getElementById('qt-done')) return;
   var box = document.getElementById('qt-steps');
   var next = document.getElementById('qt-next'), back = document.getElementById('qt-back'), send = document.getElementById('qt-send');
   var err = document.getElementById('qt-err');
-  var eur = function (n) { return '€' + n.toLocaleString('en-US'); };
+  var eur = function (n) { return '€' + n.toLocaleString(T.locale); };
   var esc = function (t) { return String(t).replace(/[&<>']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;' }[c]; }); };
 
   Q.forEach(function (q) {
@@ -49,7 +93,7 @@
     f.className = 'qt__step'; f.hidden = true; f.dataset.step = q.id;
     var h = '<legend>' + esc(q.title) + '</legend>' + (q.hint ? '<p class="qt__hint">' + esc(q.hint) + '</p>' : '') + '<div class="qt__opts qt__opts--' + q.id + '">';
     q.opts.forEach(function (o, i) {
-      var price = q.id === 'type' ? 'from ' + eur(o.p) + (o.y ? ' + ' + eur(o.y) + '/yr' : o.m ? ' + ' + eur(o.m) + '/mo' : '') : o.p ? '+' + eur(o.p) : '';
+      var price = q.id === 'type' ? T.from + eur(o.p) + (o.y ? ' + ' + eur(o.y) + T.yr : o.m ? ' + ' + eur(o.m) + T.mo : '') : o.p ? '+' + eur(o.p) : '';
       h += '<label class="qt__opt"><input type="' + (q.multi ? 'checkbox' : 'radio') + '" name="qt_' + q.id + '" value="' + i + '">' +
         (o.tag ? '<span class="qt__tag">' + esc(o.tag) + '</span>' : '') +
         '<span class="qt__opt-top"><strong>' + (o.h ? o.h.map(esc).join('<br>') : esc(o.v)) + '</strong><span class="qt__price">' + price + '</span></span>' +
@@ -82,15 +126,15 @@
       var v = a[q.id]; if (!v) return;
       (q.multi ? v : [v]).forEach(function (o) {
         t.total += o.p || 0; t.yearly += (o.y || 0) + (o.m || 0) * 12; t.monthly += o.m || 0;
-        if (o.p || q.id === 'type') t.lines.push([q.id === 'type' ? t.name : o.l || o.v, o.p ? (q.id === 'type' ? 'from ' + eur(o.p) : '+' + eur(o.p)) : 'included']);
-        if (o.y) t.lines.push(['Booking system', eur(o.y) + '/yr']);
-        if (o.m) t.lines.push([q.id === 'type' && a.paykind && a.paykind.name === 'Website for an online shop' ? 'Shop system' : 'Payment system', eur(o.m) + '/mo']);
+        if (o.p || q.id === 'type') t.lines.push([q.id === 'type' ? t.name : o.l || o.v, o.p ? (q.id === 'type' ? T.from + eur(o.p) : '+' + eur(o.p)) : T.included]);
+        if (o.y) t.lines.push([T.booking, eur(o.y) + T.yr]);
+        if (o.m) t.lines.push([a.paykind && a.paykind.shop ? T.shopSys : T.payment, eur(o.m) + T.mo]);
       });
       t.text.push(q.title + ' ' + (q.multi ? v.map(function (o) { return o.v; }).join(', ') : v.v));
     });
-    t.label = (t.total ? 'from ' : '') + eur(t.total);
-    t.extra = t.monthly ? eur(t.monthly) + ' per month (' + eur(t.yearly) + ' per year)' : t.yearly ? eur(t.yearly) + ' per year' : '';
-    t.short = t.monthly ? eur(t.monthly) + '/month' : t.yearly ? eur(t.yearly) + '/year' : '';
+    t.label = (t.total ? T.from : '') + eur(t.total);
+    t.extra = t.monthly ? eur(t.monthly) + T.perMonth + ' (' + eur(t.yearly) + T.perYear + ')' : t.yearly ? eur(t.yearly) + T.perYear : '';
+    t.short = t.monthly ? eur(t.monthly) + T.mo : t.yearly ? eur(t.yearly) + T.yr : '';
     t.days = a.type ? a.type.days : 0;
     return t;
   }
@@ -99,34 +143,34 @@
     var a = answers(), list = steps(), cur = list[pos], t = totals(a), qs = list.length - 2;
     [].forEach.call(form.querySelectorAll('.qt__step'), function (f) { f.hidden = f.dataset.step !== cur; });
     document.getElementById('qt-bar').style.width = Math.round(pos / (list.length - 1) * 100) + '%';
-    document.getElementById('qt-count').textContent = cur === 'contact' ? 'Last step' : cur === 'review' ? 'Your summary' : 'Question ' + (pos + 1) + ' of ' + qs;
+    document.getElementById('qt-count').textContent = cur === 'contact' ? T.last : cur === 'review' ? T.summary : T.question(pos + 1, qs);
     back.hidden = pos === 0;
     next.hidden = cur === 'contact';
     send.hidden = cur !== 'contact';
     err.textContent = '';
 
-    var dayText = t.days ? 'About ' + t.days + ' days' : '';
+    var dayText = t.days ? T.about(t.days) : '';
     document.getElementById('qt-total').textContent = t.label;
     document.getElementById('qt-mini').textContent = t.label + (t.short ? ' + ' + t.short : '');
     var y = document.getElementById('qt-yearly');
     y.hidden = !t.extra; y.textContent = '+ ' + t.extra;
     var d = document.getElementById('qt-days');
-    d.hidden = !t.days; d.textContent = 'Ready in: ' + dayText.toLowerCase();
+    d.hidden = !t.days; d.textContent = T.ready + dayText.toLowerCase();
     document.getElementById('qt-lines').innerHTML = t.lines.length
       ? t.lines.map(function (l) { return '<li><span>' + esc(l[0]) + '</span><span>' + l[1] + '</span></li>'; }).join('')
-      : '<li><span>Choose a website type to start</span><span></span></li>';
+      : '<li><span>' + T.start + '</span><span></span></li>';
     if (a.type) {
       document.getElementById('qt-rv-type').textContent = t.name;
       document.getElementById('qt-rv-days').textContent = dayText;
       document.getElementById('qt-rv-price').textContent = t.label + (t.extra ? ' + ' + t.extra : '');
     }
     document.getElementById('qt-answers').value = t.text.join('\n');
-    document.getElementById('qt-estimate').value = t.name + ': ' + t.label + ' one-time' + (t.extra ? ' + ' + t.extra : '') + (t.days ? ' · ' + dayText : '');
+    document.getElementById('qt-estimate').value = t.name + ': ' + t.label + T.oneTime + (t.extra ? ' + ' + t.extra : '') + (t.days ? ' · ' + dayText : '');
   }
 
   function valid() {
     var cur = steps()[pos], q = Q.filter(function (x) { return x.id === cur; })[0];
-    if (q && !q.multi && !form.querySelector('[name=qt_' + q.id + ']:checked')) { err.textContent = 'Please choose an option to continue.'; return false; }
+    if (q && !q.multi && !form.querySelector('[name=qt_' + q.id + ']:checked')) { err.textContent = T.choose; return false; }
     return true;
   }
   function go(d) {

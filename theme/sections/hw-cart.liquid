@@ -1,23 +1,38 @@
-{%- comment -%} Branded cart page (checkout's cart button links here). Uses layout/hw.liquid. {%- endcomment -%}
+{%- comment -%} Branded cart page (checkout's cart button links here). Uses layout/hw.liquid. English and Greek (/el). {%- endcomment -%}
+{%- liquid
+  assign el = false
+  assign L = ''
+  if request.locale.iso_code == 'el'
+    assign el = true
+    assign L = '/el'
+  endif
+-%}
 <div class='hw qt-page'>
   <header class='nav'>
     <div class='wrap nav__inner'>
-      <a class='brand' href='/' aria-label='Helia Web home'>
+      <a class='brand' href='{{ L }}/' aria-label='Helia Web'>
         <svg class='brand__mark' viewBox='0 0 64 64' aria-hidden='true'><rect width='64' height='64' rx='14' fill='#2c52e8'/><path d='M17 14h8.2v14.3c2.1-2.8 5-4.2 8.6-4.2 6.1 0 9.6 4 9.6 10.7V50h-8.2V36.6c0-3.6-1.6-5.5-4.6-5.5-3.3 0-5.4 2.3-5.4 6.2V50H17z' fill='#fff'/><circle cx='50.5' cy='45.8' r='4.4' fill='#f5b83d'/></svg>
         Helia&nbsp;<small>Web</small>
       </a>
-      <nav class='nav__links' aria-label='Main'>
-        <a href='/'>Back to site</a>
-        <a href='/pages/my-project'>My project</a>
-        <a class='btn btn--blue nav__cta' href='tel:+35799238575'>Call me</a>
+      <nav class='nav__links' aria-label='{% if el %}Κύριο μενού{% else %}Main{% endif %}'>
+        <a href='{{ L }}/'>{% if el %}Πίσω στην ιστοσελίδα{% else %}Back to site{% endif %}</a>
+        <a href='{{ L }}/pages/my-project'>{% if el %}Το έργο μου{% else %}My project{% endif %}</a>
+        {% render 'hw-lang' %}
+        <a class='btn btn--blue nav__cta' href='tel:+35799238575'>{% if el %}Καλέστε με{% else %}Call me{% endif %}</a>
       </nav>
     </div>
   </header>
   <main class='qt'>
     <div class='wrap' style='max-width: 720px'>
       <div class='qt__head'>
-        <span class='eyebrow'>Your order</span>
-        <h1>{% if cart.item_count > 0 %}Ready to pay{% else %}Nothing to pay yet{% endif %}</h1>
+        <span class='eyebrow'>{% if el %}Η παραγγελία σας{% else %}Your order{% endif %}</span>
+        <h1>
+          {%- if cart.item_count > 0 -%}
+            {% if el %}Έτοιμο για πληρωμή{% else %}Ready to pay{% endif %}
+          {%- else -%}
+            {% if el %}Δεν υπάρχει κάτι για πληρωμή{% else %}Nothing to pay yet{% endif %}
+          {%- endif -%}
+        </h1>
       </div>
       <div class='qt__card'>
         {%- if cart.item_count > 0 -%}
@@ -25,18 +40,18 @@
             {%- for item in cart.items -%}
               <div><dt>{{ item.product.title }}{% if item.quantity > 1 %} × {{ item.quantity }}{% endif %}</dt><dd>{{ item.final_line_price | money }}</dd></div>
             {%- endfor -%}
-            <div style='background: var(--navy); color: #fff'><dt style='color: #b9c1d9'>Total due now</dt><dd>{{ cart.total_price | money }}</dd></div>
+            <div style='background: var(--navy); color: #fff'><dt style='color: #b9c1d9'>{% if el %}Πληρωτέο τώρα{% else %}Total due now{% endif %}</dt><dd>{{ cart.total_price | money }}</dd></div>
           </dl>
-          <p class='qt__depnote'>The €50 deposit is taken off your website's total price on your final bill.</p>
+          <p class='qt__depnote'>{% if el %}Η προκαταβολή των €50 αφαιρείται από τη συνολική τιμή της ιστοσελίδας στον τελικό λογαριασμό.{% else %}The €50 deposit is taken off your website's total price on your final bill.{% endif %}</p>
           <div class='pj__actions' style='display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem'>
-            <a class='btn btn--yellow' href='/checkout'>Continue to payment</a>
-            <a class='btn btn--ghost' href='/pages/my-project'>My project</a>
+            <a class='btn btn--yellow' href='/checkout'>{% if el %}Συνέχεια στην πληρωμή{% else %}Continue to payment{% endif %}</a>
+            <a class='btn btn--ghost' href='{{ L }}/pages/my-project'>{% if el %}Το έργο μου{% else %}My project{% endif %}</a>
           </div>
         {%- else -%}
-          <p class='qt__hint'>To get started, build your quote. After you send it, you can place your €50 deposit.</p>
+          <p class='qt__hint'>{% if el %}Για να ξεκινήσετε, φτιάξτε την προσφορά σας. Αφού τη στείλετε, μπορείτε να καταβάλετε την προκαταβολή των €50.{% else %}To get started, build your quote. After you send it, you can place your €50 deposit.{% endif %}</p>
           <div style='display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem'>
-            <a class='btn btn--blue' href='/pages/get-a-quote'>Build your website</a>
-            <a class='btn btn--ghost' href='/pages/my-project'>My project</a>
+            <a class='btn btn--blue' href='{{ L }}/pages/get-a-quote'>{% if el %}Φτιάξτε την ιστοσελίδα σας{% else %}Build your website{% endif %}</a>
+            <a class='btn btn--ghost' href='{{ L }}/pages/my-project'>{% if el %}Το έργο μου{% else %}My project{% endif %}</a>
           </div>
         {%- endif -%}
       </div>

@@ -1,11 +1,11 @@
 {% layout none %}
 <!doctype html>
-<html lang='en'>
+<html lang='{{ request.locale.iso_code }}'>
 <head>
   <meta charset='utf-8'>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <meta name='theme-color' content='#2c52e8'>
-  <title>My project — Helia Web</title>
+  <title>{% if request.locale.iso_code == 'el' %}Το έργο μου{% else %}My project{% endif %} — Helia Web</title>
   <meta name='robots' content='noindex'>
   <link rel='canonical' href='{{ canonical_url }}'>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232c52e8'/%3E%3Cpath d='M17 14h8.2v14.3c2.1-2.8 5-4.2 8.6-4.2 6.1 0 9.6 4 9.6 10.7V50h-8.2V36.6c0-3.6-1.6-5.5-4.6-5.5-3.3 0-5.4 2.3-5.4 6.2V50H17z' fill='%23fff'/%3E%3Ccircle cx='50.5' cy='45.8' r='4.4' fill='%23f5b83d'/%3E%3C/svg%3E">
@@ -31,6 +31,6 @@
     .hw .pj__signin { display: grid; gap: 1.25rem; justify-items: start; }
     .hw .pj__signin p { color: var(--muted); max-width: 52ch; }
   </style>
-  {% render 'pj-body' %}
+  {%- if request.locale.iso_code == 'el' -%}{% render 'pj-body-el' %}{%- else -%}{% render 'pj-body' %}{%- endif -%}
 </body>
 </html>

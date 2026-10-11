@@ -5,8 +5,13 @@
 {%- endcomment -%}
 {%- assign p = p | default: 1 | plus: 0 | at_least: 1 | at_most: 4 -%}
 {%- assign fill = p | minus: 1 | times: 100 | divided_by: 3 -%}
-{%- if call -%}{%- assign label2 = 'Call requested' -%}{%- elsif p > 2 -%}{%- assign label2 = 'Deposit paid' -%}{%- else -%}{%- assign label2 = 'Place €50 deposit' -%}{%- endif -%}
-{%- assign labels = 'Quote submitted|' | append: label2 | append: '|In production|Website live' | split: '|' -%}
+{%- if request.locale.iso_code == 'el' -%}
+  {%- if call -%}{%- assign label2 = 'Ζητήθηκε κλήση' -%}{%- elsif p > 2 -%}{%- assign label2 = 'Η προκαταβολή πληρώθηκε' -%}{%- else -%}{%- assign label2 = 'Προκαταβολή €50' -%}{%- endif -%}
+  {%- assign labels = 'Η προσφορά στάλθηκε|' | append: label2 | append: '|Σε παραγωγή|Η ιστοσελίδα είναι online' | split: '|' -%}
+{%- else -%}
+  {%- if call -%}{%- assign label2 = 'Call requested' -%}{%- elsif p > 2 -%}{%- assign label2 = 'Deposit paid' -%}{%- else -%}{%- assign label2 = 'Place €50 deposit' -%}{%- endif -%}
+  {%- assign labels = 'Quote submitted|' | append: label2 | append: '|In production|Website live' | split: '|' -%}
+{%- endif -%}
 <div class='trk' id='{{ id | default: "trk" }}' data-p='{{ p }}'>
   <div class='trk__track' aria-hidden='true'><span class='trk__fill' style='--fill: {{ fill }}'></span></div>
   <ol class='trk__steps'>

@@ -1,0 +1,166 @@
+<div class='hw qt-page'>
+  <a class='skip' href='#qt-main'>Μετάβαση στο περιεχόμενο</a>
+  <header class='nav'>
+    <div class='wrap nav__inner'>
+      <a class='brand' href='/el' aria-label='Helia Web αρχική'>
+        <svg class='brand__mark' viewBox='0 0 64 64' aria-hidden='true'><rect width='64' height='64' rx='14' fill='#2c52e8'/><path d='M17 14h8.2v14.3c2.1-2.8 5-4.2 8.6-4.2 6.1 0 9.6 4 9.6 10.7V50h-8.2V36.6c0-3.6-1.6-5.5-4.6-5.5-3.3 0-5.4 2.3-5.4 6.2V50H17z' fill='#fff'/><circle cx='50.5' cy='45.8' r='4.4' fill='#f5b83d'/></svg>
+        Helia&nbsp;<small>Web</small>
+      </a>
+      <nav class='nav__links' aria-label='Κύριο μενού'>
+        <a href='/el'>Πίσω στην ιστοσελίδα</a>
+        <a href='/el/pages/my-project'>Το έργο μου</a>
+        {% render 'hw-lang' %}
+        <a class='btn btn--blue nav__cta' href='tel:+35799238575'>Καλέστε με</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id='qt-main' class='qt'>
+    <div class='wrap qt__grid'>
+      <div>
+        <div class='qt__head'>
+          <span class='eyebrow'>Προσφορά</span>
+          <h1>Φτιάξτε την ιστοσελίδα σας</h1>
+          <p>Απαντήστε σε λίγες γρήγορες ερωτήσεις και δείτε την εκτίμηση να ενημερώνεται καθώς προχωράτε.</p>
+        </div>
+
+        <div class='qt__card'>
+          {%- form 'contact', id: 'qt-form' -%}
+            {%- if form.posted_successfully? -%}
+              {%- assign qt_done = true -%}
+            {%- else -%}
+              {%- if form.errors -%}
+                <p class='form__msg form__msg--err' role='alert'>Ελέγξτε τη φόρμα: {{ form.errors | default_errors }}</p>
+              {%- endif -%}
+              <div class='qt__progress' aria-hidden='true'><span id='qt-bar'></span></div>
+              <p class='qt__count' id='qt-count' aria-live='polite'></p>
+
+              <div id='qt-steps'></div>
+
+              <fieldset class='qt__step' data-step='review' hidden>
+                <legend>Η ιστοσελίδα σας</legend>
+                <p class='qt__hint'>Με βάση τις επιλογές σας. Πατήστε Επόμενο για να μου τη στείλετε.</p>
+                <dl class='qt__review'>
+                  <div><dt>Ιστοσελίδα</dt><dd id='qt-rv-type'></dd></div>
+                  <div><dt>Χρόνος κατασκευής</dt><dd id='qt-rv-days'></dd></div>
+                  <div><dt>Συνολική τιμή</dt><dd id='qt-rv-price'></dd></div>
+                </dl>
+              </fieldset>
+
+              <fieldset class='qt__step' data-step='contact' hidden>
+                <legend>Πού να σας στείλω την προσφορά;</legend>
+                <div class='fields'>
+                  <div class='field'>
+                    <label for='qt-name'>Το όνομά σας</label>
+                    <input id='qt-name' type='text' name='contact[name]' autocomplete='name' required value='{{ form.name }}'>
+                  </div>
+                  <div class='field'>
+                    <label for='qt-biz'>Όνομα επιχείρησης</label>
+                    <input id='qt-biz' type='text' name='contact[Business name]' autocomplete='organization'>
+                  </div>
+                  <div class='field'>
+                    <label for='qt-email'>Email</label>
+                    <input id='qt-email' type='email' name='contact[email]' autocomplete='email' required value='{{ form.email }}'>
+                  </div>
+                  <div class='field'>
+                    <label for='qt-phone'>Τηλέφωνο</label>
+                    <input id='qt-phone' type='tel' name='contact[phone]' autocomplete='tel' value='{{ form.phone }}'>
+                  </div>
+                  <div class='field'>
+                    <label for='qt-notes'>Κάτι άλλο που πρέπει να ξέρω; (προαιρετικό)</label>
+                    <textarea id='qt-notes' name='contact[body]' placeholder='π.χ. η τωρινή σας ιστοσελίδα, ιστοσελίδες που σας αρέσουν, το είδος της επιχείρησής σας'>{{ form.body }}</textarea>
+                  </div>
+                </div>
+                <input type='hidden' name='contact[Quote answers]' id='qt-answers'>
+                <input type='hidden' name='contact[Estimate]' id='qt-estimate'>
+              </fieldset>
+
+              <p class='qt__err' id='qt-err' role='alert'></p>
+              <div class='qt__nav'>
+                <button type='button' class='btn qt__back' id='qt-back' hidden>Πίσω</button>
+                <button type='button' class='btn btn--blue' id='qt-next' style='margin-left:auto'>Επόμενο</button>
+                <button type='submit' class='btn btn--yellow' id='qt-send' hidden>Αποστολή αιτήματος</button>
+              </div>
+              <p class='qt__mini'>Η εκτίμησή σας: <b id='qt-mini'>€0</b></p>
+              <noscript><p class='qt__hint'>Ο οδηγός προσφοράς χρειάζεται JavaScript. Μπορείτε επίσης να καλέσετε στο +357 99 238575 ή να στείλετε email στο christodoulos@heliaweb.com.</p></noscript>
+            {%- endif -%}
+          {%- endform -%}
+
+          {%- if qt_done -%}
+            <div class='qt__done' id='qt-done'>
+              <span class='qt__badge' aria-hidden='true'><svg viewBox='0 0 20 20'><path d='M5 10.5l3 3 7-7' fill='none' stroke='currentColor' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/></svg></span>
+              <h2 id='qt-done-title'>Το αίτημα στάλθηκε!</h2>
+              <p id='qt-done-sum'>Έλαβα τις απαντήσεις και την εκτίμησή σας.</p>
+              {% render 'qt-tracker', p: 1, id: 'qt-trk' %}
+
+              <div class='qt__stage'>
+              <button type='button' class='qt__arrow' id='qt-prev' aria-label='Πίσω' disabled><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M15 18l-6-6 6-6' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></svg></button>
+              <div class='qt__views'>
+              <div id='qt-choice'>
+                <h3>Τι θέλετε να κάνετε στη συνέχεια;</h3>
+                <div class='qt__choices'>
+                  <button type='button' class='qt__choice qt__choice--go' id='qt-go'><strong>Προχωράμε</strong><small>Καταβάλετε προκαταβολή €50 και ξεκινάω την ιστοσελίδα σας.</small></button>
+                  <button type='button' class='qt__choice' id='qt-call'><strong>Ζητήστε κλήση</strong><small>Συζητήστε το μαζί μου πριν αποφασίσετε.</small></button>
+                </div>
+              </div>
+
+              <div class='qt__next' id='qt-pay' hidden>
+                <h3>Τέλεια, ας ξεκινήσουμε!</h3>
+                <p>Καταβάλετε την προκαταβολή των €50 για να κλείσετε τη θέση σας. Μόλις πληρωθεί, η ιστοσελίδα σας μπαίνει σε παραγωγή.</p>
+                <p class='qt__depnote'>Η προκαταβολή των €50 αφαιρείται από τη συνολική τιμή της ιστοσελίδας στον τελικό λογαριασμό.</p>
+                <a class='btn btn--yellow' id='qt-pay-link' href='/el/cart/60096830243200:1'>Πληρωμή προκαταβολής €50</a>
+              </div>
+
+              <div class='qt__next' id='qt-callbox' hidden>
+                <h3>Πότε μπορώ να σας καλέσω;</h3>
+                {%- form 'contact', id: 'qt-callform' -%}
+                  <input type='hidden' name='contact[Request]' value='Call request about a website quote'>
+                  <div class='fields'>
+                    <div class='field'>
+                      <label for='qc-email'>Email</label>
+                      <input id='qc-email' type='email' name='contact[email]' autocomplete='email' required>
+                    </div>
+                    <div class='field'>
+                      <label for='qc-phone'>Αριθμός τηλεφώνου</label>
+                      <input id='qc-phone' type='tel' name='contact[phone]' autocomplete='tel' required>
+                    </div>
+                    <div class='field'>
+                      <label for='qc-time'>Καλύτερη ώρα για κλήση</label>
+                      <select id='qc-time' name='contact[Best time to call]'>
+                        <option>Πρωί</option><option>Απόγευμα</option><option>Βράδυ</option><option>Οποιαδήποτε ώρα</option>
+                      </select>
+                    </div>
+                  </div>
+                  <button type='submit' class='btn btn--blue'>Ζητήστε κλήση</button>
+                {%- endform -%}
+              </div>
+
+              <div class='qt__next' id='qt-called' hidden>
+                <h3>Ζητήθηκε κλήση</h3>
+                <p>Θα σας καλέσω σύντομα για να συζητήσουμε την ιστοσελίδα σας. Θέλετε να προχωρήσετε νωρίτερα; Μπορείτε να καταβάλετε την προκαταβολή οποιαδήποτε στιγμή.</p>
+                <p class='qt__depnote'>Η προκαταβολή των €50 αφαιρείται από τη συνολική τιμή της ιστοσελίδας στον τελικό λογαριασμό.</p>
+                <a class='btn btn--ghost qt__deposit' href='/el/cart/60096830243200:1'>Πληρωμή προκαταβολής €50</a>
+              </div>
+              </div>
+              <button type='button' class='qt__arrow' id='qt-fwd' aria-label='Μπροστά' disabled><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M9 18l6-6-6-6' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></svg></button>
+              </div>
+
+              <p class='qt__track'>Παρακολουθήστε το έργο σας οποιαδήποτε στιγμή στη σελίδα <a href='/el/pages/my-project'>Το έργο μου</a>. Συνδεθείτε με το email που χρησιμοποιήσατε εδώ.</p>
+            </div>
+            {% render 'qt-done-script' %}
+          {%- endif -%}
+        </div>
+      </div>
+
+      <aside class='qt__summary' aria-label='Η εκτίμησή σας'{% if qt_done %} hidden{% endif %}>
+        <small>Η εκτίμησή σας</small>
+        <div class='qt__total' id='qt-total'>€0</div>
+        <div class='qt__yearly' id='qt-yearly' hidden></div>
+        <div class='qt__days' id='qt-days' hidden></div>
+        <ul class='qt__lines' id='qt-lines'><li><span>Επιλέξτε είδος ιστοσελίδας για να ξεκινήσετε</span><span></span></li></ul>
+        <p class='qt__note'>Αυτή είναι μια εκτίμηση. Η τελική τιμή επιβεβαιώνεται πριν ξεκινήσει η δουλειά.</p>
+        <p class='qt__call'>Προτιμάτε να μιλήσουμε; Καλέστε στο <a href='tel:+35799238575'>+357 99 238575</a> ή στο <a href='tel:+306945894472'>+30 694 589 4472</a></p>
+      </aside>
+    </div>
+  </main>
+</div>

@@ -3,12 +3,16 @@
   var $ = function (id) { return document.getElementById(id); };
   var store = function (k, v) { try { if (v === undefined) return sessionStorage.getItem(k); sessionStorage.setItem(k, v); } catch (e) {} };
   var q = {}; try { q = JSON.parse(store('hw-quote') || '{}'); } catch (e) {}
+  var EL = {{ request.locale.iso_code | json }} === 'el';
+  var T = EL
+    ? { ready: function (d) { return ' · έτοιμη σε περίπου ' + d + ' ημέρες'; }, deposit: 'Προκαταβολή €50', ask: 'Αίτημα κλήσης', called: 'Ζητήθηκε κλήση', calledTitle: 'Ζητήθηκε κλήση!', sent: 'Το αίτημα στάλθηκε!' }
+    : { ready: function (d) { return ' · ready in about ' + d + ' days'; }, deposit: 'Place €50 deposit', ask: 'Request a call', called: 'Call requested', calledTitle: 'Call requested!', sent: 'Request submitted!' };
 
-  if (q.type) $('qt-done-sum').textContent = q.type + ' · ' + q.price + (q.days ? ' · ready in about ' + q.days + ' days' : '');
+  if (q.type) $('qt-done-sum').textContent = q.type + ' · ' + q.price + (q.days ? T.ready(q.days) : '');
   if (q.email) {
     $('qc-email').value = q.email;
-    [].forEach.call(document.querySelectorAll('a[href^="/cart/60096830243200"]'), function (a) {
-      a.href = '/cart/60096830243200:1?checkout[email]=' + encodeURIComponent(q.email);
+    [].forEach.call(document.querySelectorAll('a[href*="/cart/60096830243200"]'), function (a) {
+      a.href = a.getAttribute('href').split('?')[0] + '?checkout[email]=' + encodeURIComponent(q.email);
     });
   }
 
@@ -26,7 +30,7 @@
   }
 
   /* Views: the two choices, then the deposit or call screens. Arrows move between them. */
-  var VIEWS = { 'qt-choice': [1, 'Place €50 deposit'], 'qt-pay': [2, 'Place €50 deposit'], 'qt-callbox': [2, 'Request a call'], 'qt-called': [2, 'Call requested'] };
+  var VIEWS = { 'qt-choice': [1, T.deposit], 'qt-pay': [2, T.deposit], 'qt-callbox': [2, T.ask], 'qt-called': [2, T.called] };
   var cur = 'qt-choice', last = VIEWS[store('hw-last')] ? store('hw-last') : null;
   function view(id) {
     if (id === 'qt-callbox' && store('hw-called') === '1') id = 'qt-called';
@@ -34,7 +38,7 @@
     if (id !== 'qt-choice') { last = id; store('hw-last', id); }
     Object.keys(VIEWS).forEach(function (x) { $(x).hidden = x !== id; });
     setStep(VIEWS[id][0], VIEWS[id][1]);
-    $('qt-done-title').textContent = id === 'qt-called' ? 'Call requested!' : 'Request submitted!';
+    $('qt-done-title').textContent = id === 'qt-called' ? T.calledTitle : T.sent;
     $('qt-prev').disabled = id === 'qt-choice';
     $('qt-fwd').disabled = id !== 'qt-choice' || !last;
     store('hw-view', id);

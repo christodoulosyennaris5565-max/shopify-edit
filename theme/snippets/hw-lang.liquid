@@ -1,0 +1,6 @@
+{%- comment -%} EN / ΕΛ language switch for the nav. Greek pages live under /el. {%- endcomment -%}
+{%- if request.locale.iso_code == 'el' -%}
+  <a class='nav__lang' href='{{ request.path | remove_first: "/el" | default: "/" }}' hreflang='en' lang='en' aria-label='English'>EN</a>
+{%- else -%}
+  <a class='nav__lang' href='/el{{ request.path }}' hreflang='el' lang='el' aria-label='Ελληνικά'>ΕΛ</a>
+{%- endif -%}

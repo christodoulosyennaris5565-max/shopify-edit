@@ -2,13 +2,20 @@
   Helia Web — studio landing page (websites & apps).
   Styles: snippets/hw-styles-1 and hw-styles-2.
   Content: snippets/hw-part-a (nav, hero, pricing, work), hw-part-b (industries, process, FAQ), hw-part-c (contact form, footer).
+  Greek copies: hw-part-a-el, hw-part-b-el, hw-part-c-el (shown on /el).
   Crumbs screenshots use helia-screen-1.webp and helia-screen-3.webp from Content > Files.
 {%- endcomment -%}
 {% render 'hw-styles-1' %}
 {% render 'hw-styles-2' %}
-{% render 'hw-part-a' %}
-{% render 'hw-part-b' %}
-{% render 'hw-part-c' %}
+{%- if request.locale.iso_code == 'el' -%}
+  {% render 'hw-part-a-el' %}
+  {% render 'hw-part-b-el' %}
+  {% render 'hw-part-c-el' %}
+{%- else -%}
+  {% render 'hw-part-a' %}
+  {% render 'hw-part-b' %}
+  {% render 'hw-part-c' %}
+{%- endif -%}
 
 {% schema %}
 {
