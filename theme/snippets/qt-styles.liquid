@@ -62,6 +62,12 @@
   .hw .qt__next form { text-align: left; max-width: 420px; margin-inline: auto; }
   .hw .qt__track { font-size: 0.9rem; margin-top: 2rem !important; }
   .hw .qt__track a { color: var(--blue); font-weight: 600; }
+  .hw .qt__stage { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; gap: 0.75rem; align-items: center; }
+  .hw .qt__arrow { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--line); background: #fff; color: var(--ink); cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease, opacity 0.15s ease; }
+  .hw .qt__arrow svg { width: 22px; height: 22px; }
+  .hw .qt__arrow:hover:not(:disabled) { border-color: var(--blue); color: var(--blue); }
+  .hw .qt__arrow:disabled { opacity: 0.3; cursor: default; }
+  @media (max-width: 520px) { .hw .qt__stage { grid-template-columns: 36px minmax(0, 1fr) 36px; gap: 0.4rem; } .hw .qt__arrow { width: 36px; height: 36px; } }
   .hw .qt__mini { display: none; margin-top: 1rem; font-size: 0.92rem; color: var(--muted); }
   .hw .qt__mini b { color: var(--ink); }
   @media (max-width: 900px) { .hw .qt__grid { grid-template-columns: 1fr; } .hw .qt__summary { position: static; } .hw .qt__mini { display: block; } }

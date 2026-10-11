@@ -12,9 +12,9 @@
     });
   }
 
-  /* Move the tracker to step p (2 = deposit or call requested). */
+  /* Move the tracker to step p, with label for step 2. */
   var trk = $('qt-trk');
-  function setStep(p, call) {
+  function setStep(p, label) {
     var steps = trk.querySelectorAll('.trk__step');
     trk.dataset.p = p;
     trk.querySelector('.trk__fill').style.setProperty('--fill', Math.round((p - 1) * 100 / 3));
@@ -22,16 +22,31 @@
       var n = i + 1;
       li.className = 'trk__step trk__step--' + (n === 1 || n < p ? 'done' : n === p ? 'current' : 'todo');
     });
-    steps[1].querySelector('.trk__label').textContent = call ? 'Call requested' : 'Place €50 deposit';
+    steps[1].querySelector('.trk__label').textContent = label;
   }
-  function show(id) { ['qt-choice', 'qt-pay', 'qt-callbox', 'qt-called'].forEach(function (x) { $(x).hidden = x !== id; }); }
 
-  var next = store('hw-next');
-  if (next === 'call') { setStep(2, true); show('qt-called'); $('qt-done-title').textContent = 'Call requested!'; }
-  else if (next === 'go') { setStep(2); show('qt-pay'); }
+  /* Views: the two choices, then the deposit or call screens. Arrows move between them. */
+  var VIEWS = { 'qt-choice': [1, 'Place €50 deposit'], 'qt-pay': [2, 'Place €50 deposit'], 'qt-callbox': [2, 'Request a call'], 'qt-called': [2, 'Call requested'] };
+  var cur = 'qt-choice', last = VIEWS[store('hw-last')] ? store('hw-last') : null;
+  function view(id) {
+    if (id === 'qt-callbox' && store('hw-called') === '1') id = 'qt-called';
+    cur = id;
+    if (id !== 'qt-choice') { last = id; store('hw-last', id); }
+    Object.keys(VIEWS).forEach(function (x) { $(x).hidden = x !== id; });
+    setStep(VIEWS[id][0], VIEWS[id][1]);
+    $('qt-done-title').textContent = id === 'qt-called' ? 'Call requested!' : 'Request submitted!';
+    $('qt-prev').disabled = id === 'qt-choice';
+    $('qt-fwd').disabled = id !== 'qt-choice' || !last;
+    store('hw-view', id);
+  }
 
-  $('qt-go').addEventListener('click', function () { store('hw-next', 'go'); setStep(2); show('qt-pay'); });
-  $('qt-call').addEventListener('click', function () { show('qt-callbox'); $('qc-phone').focus(); });
-  $('qt-callform').addEventListener('submit', function () { store('hw-next', 'call'); });
+  var saved = store('hw-view');
+  if (saved && VIEWS[saved]) view(saved); else view('qt-choice');
+
+  $('qt-go').addEventListener('click', function () { view('qt-pay'); });
+  $('qt-call').addEventListener('click', function () { view('qt-callbox'); if (cur === 'qt-callbox') $('qc-phone').focus(); });
+  $('qt-prev').addEventListener('click', function () { view('qt-choice'); });
+  $('qt-fwd').addEventListener('click', function () { if (last) view(last); });
+  $('qt-callform').addEventListener('submit', function () { store('hw-called', '1'); store('hw-view', 'qt-called'); });
 })();
 </script>

@@ -142,7 +142,7 @@
         email: form.querySelector('[name="contact[email]"]').value, type: a.type.v,
         price: t.label + (t.yearly ? ' + ' + eur(t.yearly) + '/year' : ''), days: t.days
       }));
-      sessionStorage.removeItem('hw-next');
+      sessionStorage.removeItem('hw-view'); sessionStorage.removeItem('hw-called'); sessionStorage.removeItem('hw-last');
     } catch (x) {}
   });
 

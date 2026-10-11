@@ -92,6 +92,9 @@
               <p id='qt-done-sum'>I've received your answers and your estimate.</p>
               {% render 'qt-tracker', p: 1, id: 'qt-trk' %}
 
+              <div class='qt__stage'>
+              <button type='button' class='qt__arrow' id='qt-prev' aria-label='Back' disabled><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M15 18l-6-6 6-6' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></svg></button>
+              <div class='qt__views'>
               <div id='qt-choice'>
                 <h3>What would you like to do next?</h3>
                 <div class='qt__choices'>
@@ -134,6 +137,9 @@
                 <h3>Call requested</h3>
                 <p>I'll call you soon to talk about your website. Ready to go ahead before then? You can place your deposit any time.</p>
                 <a class='btn btn--ghost qt__deposit' href='/cart/60096830243200:1'>Pay €50 deposit</a>
+              </div>
+              </div>
+              <button type='button' class='qt__arrow' id='qt-fwd' aria-label='Forward' disabled><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M9 18l6-6-6-6' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></svg></button>
               </div>
 
               <p class='qt__track'>Follow your project any time on <a href='/pages/my-project'>My project</a>. Sign in with the email you used here.</p>
