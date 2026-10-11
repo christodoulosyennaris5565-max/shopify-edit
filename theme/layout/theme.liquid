@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    {%- comment -%}
+      Default layout, used by Shopify system pages such as the spam check after a form is sent,
+      search, 404 and product pages. Keeps the base theme styles for page content but uses the
+      Helia Web header and footer.
+    {%- endcomment -%}
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232c52e8'/%3E%3Cpath d='M17 14h8.2v14.3c2.1-2.8 5-4.2 8.6-4.2 6.1 0 9.6 4 9.6 10.7V50h-8.2V36.6c0-3.6-1.6-5.5-4.6-5.5-3.3 0-5.4 2.3-5.4 6.2V50H17z' fill='%23fff'/%3E%3Ccircle cx='50.5' cy='45.8' r='4.4' fill='%23f5b83d'/%3E%3C/svg%3E">
+    {%- render 'meta-tags' -%}
+    {%- render 'stylesheets' -%}
+    {%- render 'fonts' -%}
+    {%- render 'scripts' -%}
+    {%- render 'theme-styles-variables' -%}
+    {%- render 'color-palette' -%}
+    <link rel='preconnect' href='https://fonts.googleapis.com'>
+    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
+    <link href='https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap' rel='stylesheet'>
+    {% if request.design_mode %}
+      {%- render 'theme-editor' -%}
+    {% endif %}
+    {{ content_for_header }}
+  </head>
+
+  <body style='margin: 0; background: #f2f4f8'>
+    {% render 'hw-styles-1' %}
+    <style>
+      .hw-default { min-height: 60vh; padding-block: clamp(2rem, 6vw, 4rem); }
+      .hw-default__card { max-width: 760px; margin-inline: auto; background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: clamp(1.25rem, 4vw, 2.25rem); font-family: var(--font-body); color: var(--ink); }
+      .hw-default__card h1, .hw-default__card h2 { font-family: var(--font-display); }
+      .hw-default__card button, .hw-default__card input[type='submit'] { background: var(--blue); color: #fff; border: 0; border-radius: var(--radius); padding: 0.9rem 1.5rem; font-weight: 600; cursor: pointer; }
+      .hw .hw-foot { background: var(--navy); color: #b9c1d9; padding-block: 1.5rem; font-size: 0.9rem; }
+      .hw .hw-foot .wrap { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; }
+      .hw .hw-foot a { color: #fff; }
+    </style>
+    <div class='hw'>
+      <header class='nav'>
+        <div class='wrap nav__inner'>
+          <a class='brand' href='/' aria-label='Helia Web home'>
+            <svg class='brand__mark' viewBox='0 0 64 64' aria-hidden='true'><rect width='64' height='64' rx='14' fill='#2c52e8'/><path d='M17 14h8.2v14.3c2.1-2.8 5-4.2 8.6-4.2 6.1 0 9.6 4 9.6 10.7V50h-8.2V36.6c0-3.6-1.6-5.5-4.6-5.5-3.3 0-5.4 2.3-5.4 6.2V50H17z' fill='#fff'/><circle cx='50.5' cy='45.8' r='4.4' fill='#f5b83d'/></svg>
+            Helia&nbsp;<small>Web</small>
+          </a>
+          <nav class='nav__links' aria-label='Main'>
+            <a href='/'>Home</a>
+            <a href='/pages/my-project'>My project</a>
+            <a class='btn btn--blue nav__cta' href='/pages/get-a-quote'>Get a quote</a>
+          </nav>
+        </div>
+      </header>
+    </div>
+
+    <main id="MainContent" class="hw-default content-for-layout" role="main" data-template="{{ template }}">
+      <div class='hw-default__card'>
+        {{ content_for_layout }}
+      </div>
+    </main>
+
+    <div class='hw'>
+      <footer class='hw-foot'>
+        <div class='wrap'>
+          <span>Helia Web · Websites from €450</span>
+          <span><a href='tel:+35799238575'>+357 99 238575</a> · <a href='mailto:christodoulos@heliaweb.com'>christodoulos@heliaweb.com</a></span>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
