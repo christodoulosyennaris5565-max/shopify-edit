@@ -112,7 +112,8 @@
           <article class='case'>
             <div>
               <span class='case__type'>Sample app</span>
-              <h3>Crumbs: Student Finance</h3>
+              {%- assign ci = images['crumbs-icon.png'] -%}
+              <h3 style='display:flex;align-items:center;gap:0.75rem'>{%- if ci != blank -%}{{ ci | image_url: width: 112 | image_tag: alt: '', width: 56, height: 56, style: 'width:56px;height:56px;border-radius:14px;flex:none' }}{%- endif -%}Crumbs: Student Finance</h3>
               <p>A money app for students. Upload a bank statement or screenshots, and Crumbs sorts every payment into categories, charts your spending day by day, and suggests cheaper swaps that save you money.</p>
               <ul class='case__tags'>
                 <li>iPhone &amp; Android</li>
@@ -124,13 +125,14 @@
             </div>
             <div class='case__media'>
               <div class='phones'>
-                {%- assign s1 = images['helia-screen-1.webp'] -%}
-                {%- assign s2 = images['helia-screen-3.webp'] -%}
+                {%- comment -%} New Crumbs screenshots (crumbs-screen-1/2 in Content > Files) replace the old ones once uploaded. {%- endcomment -%}
+                {%- assign s1 = images['crumbs-screen-1.png'] | default: images['helia-screen-1.webp'] -%}
+                {%- assign s2 = images['crumbs-screen-2.png'] | default: images['helia-screen-2.webp'] -%}
                 {%- if s1 != blank -%}
-                  <div class='phone'>{{ s1 | image_url: width: 480 | image_tag: loading: 'lazy', alt: 'Crumbs app: monthly spending overview with a day-by-day chart', width: 480, height: 853 }}</div>
+                  <div class='phone'>{{ s1 | image_url: width: 480 | image_tag: loading: 'lazy', alt: 'Crumbs app: see where your money really goes, with monthly spending and a day-by-day chart', width: 480, height: 853 }}</div>
                 {%- endif -%}
                 {%- if s2 != blank -%}
-                  <div class='phone'>{{ s2 | image_url: width: 480 | image_tag: loading: 'lazy', alt: 'Crumbs app: every payment sorted into categories', width: 480, height: 853 }}</div>
+                  <div class='phone'>{{ s2 | image_url: width: 480 | image_tag: loading: 'lazy', alt: 'Crumbs app: smart swaps that keep more of your money', width: 480, height: 853 }}</div>
                 {%- endif -%}
               </div>
             </div>
@@ -139,12 +141,13 @@
           <article class='case'>
             <div>
               <span class='case__type'>Sample website</span>
-              <h3>Solomou Woodworking</h3>
-              <p>A website for a custom woodworking workshop. It shows their furniture and handmade pieces in a gallery and makes it easy for customers to get in touch about a commission.</p>
+              <h3>Solomou Wood Working</h3>
+              <p>A website for S. Solomou Wood Working, a carpentry workshop in Dali, Cyprus. It shows their custom kitchens, wardrobes, wall cladding and furniture, with a gallery of their work and a one-tap button to call them.</p>
               <ul class='case__tags'>
                 <li>Static website</li>
+                <li>Greek language</li>
                 <li>Project gallery</li>
-                <li>Contact &amp; enquiries</li>
+                <li>Tap to call</li>
                 <li>Mobile friendly</li>
               </ul>
               <a class='btn btn--ghost' href='https://solomouwoodworking.com' target='_blank' rel='noopener'>Visit solomouwoodworking.com
@@ -152,16 +155,13 @@
               </a>
             </div>
             <div class='case__media'>
-              <div class='browser' aria-hidden='true'>
+              <a class='browser' href='https://solomouwoodworking.com' target='_blank' rel='noopener' aria-label='Open solomouwoodworking.com'>
                 <div class='browser__bar'><i></i><i></i><i></i><span class='browser__url'>solomouwoodworking.com</span></div>
-                <div class='wood'>
-                  <div class='wood__nav'><span>Solomou</span><span>Work · About · Contact</span></div>
-                  <div class='wood__title'>Handmade furniture,<br>built to last.</div>
-                  <div class='wood__sub'>Custom woodwork, made to order.</div>
-                  <div class='wood__grid'><span></span><span></span><span></span></div>
-                  <span class='wood__btn'>Request a piece</span>
-                </div>
-              </div>
+                {%- assign sw = images['solomou-preview.webp'] -%}
+                {%- if sw != blank -%}
+                  {{ sw | image_url: width: 1280 | image_tag: loading: 'lazy', alt: 'Solomou Wood Working homepage: a fitted wooden kitchen with the headline "Ξύλο δουλεμένο στα μέτρα του χώρου σας"', width: 1280, height: 644, sizes: '(max-width: 860px) 100vw, 540px', style: 'width:100%;height:auto' }}
+                {%- endif -%}
+              </a>
             </div>
           </article>
         </div>
