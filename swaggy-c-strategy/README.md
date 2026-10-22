@@ -7,6 +7,8 @@ A detailed write-up of how forex and gold trader Chris "Swaggy C" Williams trade
 | File | What it is |
 |---|---|
 | [MASTER_STRATEGY.md](MASTER_STRATEGY.md) | **Start here.** His current (2025–2026) position-trading strategy as a step-by-step rulebook with a pre-trade checklist. Also covers how the strategy changed from 2020 to 2026, the earlier versions in full, contradictions, and what he never discloses. |
+| [BACKTEST_SPEC.md](BACKTEST_SPEC.md) | His current strategy as exact, codeable rules for building and backtesting. Uses 1% risk per trade, set by the user, plus a default and test range for every detail he doesn't give. Includes a worked USD/JPY example to test the code against. |
+| [strategy_params.yaml](strategy_params.yaml) | The same parameters in a machine-readable file, each marked USER, STATED, VISUAL or BASE. |
 | [ALL_VIDEOS_COMBINED.md](ALL_VIDEOS_COMBINED.md) | Every per-video write-up in one file, newest first. |
 | [videos/](videos/) | One file per strategy video (45), plus [chart notes](videos/2026-visual-chart-notes.md) from a frame-by-frame review of his two April 2026 strategy videos. |
 | [shorts/strategy-shorts.md](shorts/strategy-shorts.md) | The 53 Shorts whose titles suggested strategy content; 38 of them contain some. |

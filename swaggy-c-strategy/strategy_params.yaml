@@ -1,0 +1,187 @@
+# Swaggy C position-trading strategy: baseline parameters for building and backtesting.
+# Read BACKTEST_SPEC.md first; it explains every rule and parameter below.
+#
+# Each parameter has:
+#   default    the baseline value to build with
+#   test       values or range to try in the backtest
+#   basis      USER   = set by the user
+#              STATED = he says it in a video
+#              VISUAL = seen on his chart, not said
+#              BASE   = our chosen default where he gives no rule (needs testing)
+#
+# Fibonacci convention used throughout (matches his charts):
+#   For a LONG:  A = swing low = 100%, B = swing high = 0%.
+#   For a SHORT: A = swing high = 100%, B = swing low = 0%.
+#   level(p) = B + (A - B) * p/100        e.g. 61.8 retracement
+#   extensions use negative p: -27 -> beyond B by 27% of the swing.
+
+risk:
+  risk_per_idea_pct:
+    default: 1.0
+    test: [0.5, 1.0, 1.5, 2.0]
+    basis: USER
+    note: "Total risk of the whole idea (all ladder orders filled) = 1% of account balance at placement."
+  ladder_risk_split:            # share of the 1% given to each limit order
+    default: {fib_38_2: 0.20, fib_50: 0.30, fib_61_8: 0.50}
+    test:
+      - {fib_38_2: 0.333, fib_50: 0.333, fib_61_8: 0.334}
+      - {fib_38_2: 0.0,   fib_50: 0.40,  fib_61_8: 0.60}
+      - {fib_38_2: 0.0,   fib_50: 0.0,   fib_61_8: 1.0}
+    basis: BASE
+    note: "He says 61.8 gets the biggest lot and 38.2 the smallest (STATED); the ratio is ours."
+  max_open_risk_pct:
+    default: 3.0
+    test: [2.0, 3.0, 5.0]
+    basis: BASE
+  max_ideas_per_symbol:
+    default: 1
+    test: [1, 2]
+    basis: BASE
+  max_ideas_same_currency_direction:   # e.g. long USDJPY + long USDCAD = 2 x long USD
+    default: 2
+    test: [1, 2, 3]
+    basis: BASE
+  pip_value_source:
+    default: broker_contract_spec
+    basis: BASE
+    note: "Do NOT use his $10/pip shorthand for JPY or AUD-quoted pairs; compute from the symbol spec."
+
+instruments:
+  default: [USDJPY, GBPAUD, USDCAD, GBPUSD, XAUUSD]
+  optional: [EURUSD, AUDUSD, GBPJPY]
+  basis: STATED
+  note: "Pairs from his 2025-26 examples. Backtest each symbol on its own first; gold was 'too ugly' for him in July 2026."
+  round_number_step:            # spacing of his psychological levels
+    USDJPY: 5.00
+    GBPJPY: 5.00
+    GBPAUD: 0.0250
+    USDCAD: 0.0250
+    GBPUSD: 0.0250
+    EURUSD: 0.0250
+    AUDUSD: 0.0250
+    XAUUSD: 100.0
+  round_number_basis: "VISUAL for USDJPY (5.00), GBPAUD (0.025), USDCAD (0.025), gold (~100); BASE for the rest."
+
+timeframes:
+  bias_timeframe:   {default: W1, basis: STATED}
+  setup_timeframe:  {default: D1, test: [D1, W1], basis: BASE, note: "He says daily in 2025, weekly in 2026. Test both."}
+  schedule:         {default: "first D1 bar of each week (Monday)", basis: STATED, note: "He analyses Sunday/Monday. Pending orders still fill any day."}
+
+bias:                            # the '3-month direction'
+  method:
+    default: weekly_structure_and_ema
+    basis: BASE
+    note: "Long only if the weekly chart shows a higher high + higher low AND weekly EMA8 > EMA14; short is the mirror."
+  weekly_swing_pivot_bars: {default: 2, test: [2, 3], basis: BASE}
+  use_weekly_ema_filter:   {default: true, test: [true, false], basis: BASE}
+  invalidation:
+    default: "daily close beyond the last confirmed daily swing low (long) / high (short) that the setup is built on"
+    basis: STATED
+    note: "He drops a bias only when structure breaks (lower highs and lower lows)."
+
+swing_detection:                 # finding A and B for the Fibonacci
+  pivot_bars_each_side: {default: 5, test: [3, 5, 8, 10], basis: BASE}
+  price_source:         {default: wicks, basis: VISUAL, note: "His Fib is drawn wick to wick."}
+  min_impulse_atr_mult:
+    default: 3.0
+    test: [2.0, 3.0, 4.0, 5.0]
+    basis: BASE
+    note: "Impulse A->B must be at least N x ATR(14) on the setup timeframe. Filters out small swings."
+  atr_period: {default: 14, basis: BASE}
+  impulse_must_agree_with_bias: {default: true, basis: STATED}
+
+entries:
+  order_type: {default: limit, basis: STATED}
+  ladder_levels_pct: {default: [38.2, 50.0, 61.8], test: [[50.0, 61.8], [61.8]], basis: STATED}
+  place_when:
+    default: "B confirmed by pivot AND price has not yet touched the 38.2 level"
+    basis: BASE
+    note: "If price already passed 38.2 when B is confirmed, place only the deeper orders that are still unfilled-able."
+  cancel_unfilled_when:
+    default: [tp1_hit, new_swing_beyond_B, stop_hit, max_pending_days]
+    basis: BASE
+  max_pending_days: {default: 20, test: [10, 20, 40], basis: BASE}
+  require_round_number_confluence:
+    default: false
+    test: [false, true]
+    basis: BASE
+    note: "When true: the 50 or 61.8 level must sit within confluence_tolerance of a round number."
+  confluence_tolerance_atr: {default: 0.5, basis: BASE}
+  require_daily_ema_alignment:
+    default: false
+    test: [false, true]
+    basis: BASE
+    note: "When true: daily EMA8 above EMA14 for longs at placement time."
+  trendline_third_touch_filter:
+    default: false
+    basis: BASE
+    note: "He uses a third trendline touch as confluence. Hard to code; leave off for v1."
+
+stop_loss:
+  level_pct:
+    default: 89.3
+    test: [78.6, 85.0, 89.3, 95.0, 100.0]
+    basis: STATED
+    note: "'Middle of the 78.6 and the 100' = 89.3. One shared stop for every ladder order."
+  buffer_atr: {default: 0.0, test: [0.0, 0.1, 0.25], basis: BASE}
+
+take_profit:
+  targets_pct:  {default: [0.0, -27.0, -61.8], basis: STATED}
+  tp4:          {default: next_round_number_beyond_tp3, basis: STATED, note: "Uses round_number_step for the symbol."}
+  close_fractions:
+    default: [0.25, 0.25, 0.25, 0.25]
+    test:
+      - [0.10, 0.20, 0.30, 0.40]
+      - [0.60, 0.20, 0.10, 0.10]
+      - [0.0, 0.50, 0.50, 0.0]
+    basis: BASE
+    note: "Fraction of the ORIGINAL filled size closed at TP1..TP4. 2025 he said 10/20/30/40%; 2023 he took 60-75% at TP1."
+  min_reward_risk:
+    default: 3.0
+    test: [2.0, 3.0, 4.0]
+    basis: STATED
+    note: "Skip the setup if the risk-weighted reward at TP3 (all ladder orders filled) is below this many R. See BACKTEST_SPEC.md section 3.6."
+
+management:
+  breakeven_trigger:
+    default: "first of: TP1 hit, OR a confirmed D1 swing higher low (long) above the average entry"
+    test: [tp1_only, higher_low_only, never]
+    basis: STATED
+  higher_low_pivot_bars: {default: 3, test: [2, 3, 5], basis: BASE}
+  breakeven_offset_pips: {default: 0, basis: VISUAL, note: "On screen he drags the stop to exactly break-even."}
+  trail:
+    default: "after break-even, move stop to just beyond each new confirmed D1 swing low (long) / high (short)"
+    test: [d1_structure, w1_structure, none]
+    basis: STATED
+  trail_buffer_atr: {default: 0.1, basis: BASE}
+  max_hold_days:
+    default: 60
+    test: [30, 60, 90]
+    basis: BASE
+    note: "He targets where price will be in ~3 months; holds 5 days to 2 months."
+  hold_over_weekend: {default: true, basis: STATED}
+  include_swap_costs: {default: true, basis: STATED, note: "He accepts swap as a cost of holding."}
+  reentry_allowed: {default: true, basis: STATED, note: "A new valid swing (new A-B) in the bias direction is a new idea."}
+
+news_filter:                     # Blaze Funded rule, not his
+  block_window_minutes: {default: 3, basis: "FIRM RULE"}
+  source: "Forex Factory high-impact (red folder) events for the symbol's currencies"
+  action:
+    default: "cancel pending orders 3 min before the event, re-place 3 min after; never open/close inside the window"
+    basis: BASE
+    note: "Trades inside the window can be removed or breach the account. Backtest: drop any fill or exit inside a window."
+
+backtest_assumptions:
+  data: "broker M1 or tick data for fills; D1/W1 for signals"
+  spread: "use historical spread per symbol; fallback fixed: majors 1.0 pip, GBPAUD 2.5, XAUUSD 0.30"
+  slippage_pips: {default: 0.5, basis: BASE}
+  commission_per_lot_round_turn: {default: 7.0, basis: BASE, note: "USD; set to the account's real commission."}
+  same_bar_tp_and_sl: "assume stop hit first (conservative)"
+  start_balance: 100000
+  period: "2015-01-01 to latest; report 2015-2019, 2020-2022, 2023-latest separately"
+
+prop_firm_checks:                # Blaze Funded; confirm current values on the account before live use
+  daily_loss_limit_pct: {default: null, note: "Fill in from the account's rules and fail the run if breached."}
+  max_drawdown_pct:     {default: null, note: "Fill in from the account's rules (trailing or static)."}
+  averaging_down_review:
+    note: "The ladder adds size as price moves against the first fill. It is pre-planned with one fixed stop, but confirm with Blaze Funded support that this is not treated as 'average-down'."
