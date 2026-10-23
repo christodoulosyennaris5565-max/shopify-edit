@@ -17,10 +17,10 @@
 
 risk:
   risk_per_idea_pct:
-    default: 1.0
+    default: 1.5
     test: [0.5, 1.0, 1.5, 2.0]
     basis: USER
-    note: "Total risk of the whole idea (all ladder orders filled) = 1% of account balance at placement."
+    note: "User's test setting (2026-10-23): 1.5% of account balance at placement = total risk if all ladder orders fill. Earlier baseline was 1%."
   ladder_risk_split:            # share of the 1% given to each limit order
     default: {fib_38_2: 0.20, fib_50: 0.30, fib_61_8: 0.50}
     test:
@@ -30,9 +30,10 @@ risk:
     basis: BASE
     note: "He says 61.8 gets the biggest lot and 38.2 the smallest (STATED); the ratio is ours."
   max_open_risk_pct:
-    default: 3.0
-    test: [2.0, 3.0, 5.0]
+    default: 4.5
+    test: [3.0, 4.5, 6.0]
     basis: BASE
+    note: "3 ideas at 1.5% each. Risk stops counting once an idea's stop is at break-even."
   max_ideas_per_symbol:
     default: 1
     test: [1, 2]
@@ -177,7 +178,7 @@ backtest_assumptions:
   slippage_pips: {default: 0.5, basis: BASE}
   commission_per_lot_round_turn: {default: 7.0, basis: BASE, note: "USD; set to the account's real commission."}
   same_bar_tp_and_sl: "assume stop hit first (conservative)"
-  start_balance: 100000
+  start_balance: 100000   # USER
   period: "2015-01-01 to latest; report 2015-2019, 2020-2022, 2023-latest separately"
 
 prop_firm_checks:                # Blaze Funded; confirm current values on the account before live use
